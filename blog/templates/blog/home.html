@@ -1,0 +1,586 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+
+<head>
+    <style>
+        tr:hover {
+            background-color: #ffff99!important;
+        }
+
+        h2 {
+  text-align: center;
+}
+
+table caption {
+	padding: .5em 0;
+}
+
+@media screen and (max-width: 767px) {
+  table caption {
+    border-bottom: 1px solid #ddd;
+  }
+}
+
+.p {
+  text-align: center;
+  padding-top: 140px;
+  font-size: 14px;
+}
+
+.price,
+.lead p {
+  font-weight: 600;
+  font-size: 32px;
+  display: inline-block;
+  line-height: 60px;
+  border: 0;
+  width: 150px;
+  height: 48px;
+}
+
+h4.great {
+  background: #00ac98;
+  margin: 0 0 25px -60px;
+  padding: 7px 15px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  display: inline-block;
+  -moz-box-shadow: 2px 4px 5px 0 #ccc;
+  -webkit-box-shadow: 2px 4px 5px 0 #ccc;
+  box-shadow: 2px 4px 5px 0 #ccc;
+}
+
+
+.form-pricing {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.price-form {
+  background: #ffffff;
+  margin-bottom: 10px;
+  padding: 40px;
+
+  border: 1px solid #eeeeee;
+  min-height: 520px;
+  border-radius: 4px;
+  /*-moz-box-shadow:    0 5px 5px 0 #ccc;
+    -webkit-box-shadow: 0 5px 5px 0 #ccc;
+    box-shadow:         0 5px 5px 0 #ccc;*/
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-group span.price {
+  font-weight: 200;
+  display: inline-block;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.help-text {
+  display: block;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  color: #737373;
+  /*position: absolute;*/
+  /*margin-left: 20px;*/
+  font-weight: 200;
+  /*text-align: right;*/
+  width: 188px;
+}
+
+.price-form label {
+  font-weight: 300;
+  font-size: 22px;
+}
+
+
+
+/* HR */
+
+hr.style {
+  margin-top: 0;
+  border: 0;
+  border-bottom: 1px dashed #ccc;
+  background: #999;
+}
+
+
+input[type="text"].decimal {
+
+  background-color : #d1d1d1;
+
+}
+
+
+
+    </style>
+</head>
+<!--{% for ticker in tickers %}
+&lt;!&ndash;<h1>{{ticker.symbol}}</h1>&ndash;&gt;
+&lt;!&ndash;<p> by  {{ticker.user_id}}  on {{ticker.price}}</p>&ndash;&gt;
+&lt;!&ndash;<p>{{ticker.notes}}</p>&ndash;&gt;
+
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{ ticker.user_id }}</a>
+            <small class="text-muted">{{ ticker.date_registered }}</small>
+        </div>
+        <h2><a class="article-title" href="#">{{ ticker.symbol }}</a></h2>
+        <p class="article-content">{{ ticker.notes}}</p>
+    </div>
+</article>
+{% endfor %}-->
+<div class="container mb-4">
+
+
+    <div class="input-group">
+        <input id="url" type="text" class="form-control" placeholder="Enter Finviz Screener URL">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" id="myscreener">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+    </div>
+
+</div>
+
+<div class="table-responsive">
+    <table id="tickertbl" class="table table-hover">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col" class="text-center">Ticker</th>
+        <th scope="col" class="text-center">Float</th>
+        <th scope="col" class="text-center">Float Short</th>
+        <th scope="col" class="text-center">ATR</th>
+        <th scope="col" class="text-center">RSI</th>
+        <th scope="col" class="text-center">Avg Volume</th>
+        <th scope="col" class="text-center">Price</th>
+        <th scope="col" class="text-center">Volume</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for key in symbols %}
+    <tr>
+        <!--<th scope="row">3</th>-->
+        <td class="text-center" ><a id="tkrs" href="#myModal" class="btn btn-primary" data-toggle="modal">{{ key.Ticker }}</a></td>
+
+
+        {% if  key.Float|slice:":-1" < 21.00 %}
+            <td class="text-center" bgcolor="#92a8d1">{{ key.Float }}M</td>
+        {% else %}
+            <td class="text-center">{{  key.Float}}M</td>
+        {% endif %}
+
+
+        <td class="text-center">{{ key.FloatShort }}</td>
+        <td class="text-center">{{ key.ATR }}</td>
+        <td class="text-center">{{ key.RSI }}</td>
+        <td class="text-center">{{ key.AvgVolume }}</td>
+        <td id="currentprice" class="text-center" >{{ key.Price }}</td>
+
+        <!--{% if  key.Price > 2 %}
+            <td id="currentprice" class="text-center" bgcolor="#00FF00">{{ key.Price }}</td>
+        {% else %}
+            <td id="currentprice" class="text-center" >{{ key.Price }}</td>
+        {% endif %}-->
+
+
+        <td class="text-center">{{ key.Volume }}</td>
+
+
+    </tr>
+    {% endfor %}
+    </tbody>
+</table> </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+<div class="modal-dialog modal-dialog-centered">
+     <div class="modal-content">
+<!--<div class="col-sm-6">-->
+    <div class="price-form">
+        <h2 class="mb-4" id="tkrh"></h2>
+          <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">Price: </label>
+                <!--<span class="help-text">Amount that you need to pay</span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="decimal price lead" name="price" type="text" id="price"  style="" />
+              </div>
+            </div>
+          </div>
+
+        <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">Risk/Reward Ratio: </label>
+                <!--<span class="help-text">Amount that you need to pay</span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="decimal price lead" name="riskreward" type="text" id="riskreward"  style="" />
+              </div>
+            </div>
+          </div>
+
+         <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">Stop Loss: </label>
+                <!--<span class="help-text">Amount that you need to pay</span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="decimal price lead" name="stop" type="text" id="stop"  style="" />
+              </div>
+            </div>
+          </div>
+
+         <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">PP: </label>
+                <!--<span class="help-text">Amount that you need to pay</span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="decimal price lead" name="pp" type="text" id="pp"  style="" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">S1: </label>
+                <!--<span class="help-text">Amount that you need to pay</span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <!-- <p class="price lead" id="total12"></p> -->
+                <input class="decimal price lead" name="supportone" type="text" id="sone"  style="" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">S2: </label>
+                <!--<span class="help-text">Amount that you need to pay</span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="decimal price lead" name="supporttwo" type="text" id="stwo"  style="" />
+              </div>
+            </div>
+          </div>
+
+
+               <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">Downside: </label>
+                <!--<span class="help-text"></span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="decimal price lead" name="down" type="text" id="down" style="" />
+              </div>
+            </div>
+          </div>
+
+            <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">R1: </label>
+                <!--<span class="help-text">Amount that you need to pay</span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="decimal price lead" name="ressistanceone" type="text" id="rone"  style="" />
+              </div>
+            </div>
+          </div>
+
+            <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">R2: </label>
+                <!--<span class="help-text"></span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="decimal price lead" name="ressistancetwo" type="text" id="rtwo" style="" />
+              </div>
+            </div>
+          </div>
+
+         <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">Upside: </label>
+                <!--<span class="help-text"></span>-->
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="decimal price lead" name="up" type="text" id="up" style="" />
+              </div>
+            </div>
+          </div>
+
+
+            <div class="form-group mb-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <label for="amount_amirol" class="control-label">ATR: </label>
+                <span class="help-text"></span>
+              </div>
+              <div class="col-sm-6">
+                <input type="hidden" id="amount_amirol" class="form-control">
+                <input class="price lead decimal" name="totalprice52" type="text" id="atr"  style="" />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:30px"></div>
+          <hr class="style">
+
+          <div class="form-group">
+            <div class="col-sm-12">
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Calculate <span class="glyphicon glyphicon-chevron-right"></span></button>
+            </div>
+          </div>
+
+        </div>
+
+<!--</div>-->
+</div>
+</div>
+</div>
+
+<script>
+    <!--$(document).ready(function(){-->
+
+          <!--$.getJSON('{% url "load_tickers" %}',{-->
+
+           <!--},-->
+            <!--function(data) {-->
+
+            <!--})-->
+            <!--.done(function() { console.log('getJSON request succeeded!'); })-->
+            <!--.fail(function(jqXHR, textStatus, errorThrown) { console.log('getJSON request failed! ' + textStatus); });-->
+
+    <!--});-->
+
+     $('#tickertbl tr').click(function() {
+         <!--var ticker = $(this).find("td:first").html();-->
+         var test = $(this).find("#tkrs").html()
+
+         var ticker = $(this).find("#tkrs").html()
+         var price = $(this).find("td").eq(6).html();
+         var atr = $(this).find("td").eq(3).html();
+           var offset = 20;
+         $("#tbldata tbody tr").remove();
+         $("#tbldata").hide();
+
+         $("#tkrh").text(ticker);
+
+                 $("#riskreward").css( "background-color", "#d1d1d1");
+                 $("#price").val(0);
+                 $("#sone").val(0);
+                 $("#stwo").val(0);
+                 $("#rone").val(0);
+                 $("#rtwo").val(0);
+                 $("#atr").val(0);
+                 $("#down").val(0);
+                 $("#up").val(0);
+                 $("#riskreward").val(0);
+                 $("#pp").val(0);
+                 $("#stop").val(0);
+
+          $.getJSON('{% url "data_calculations" %}',{
+              tcker : ticker
+           },
+           function(data) {
+                /*$("#tbldata").show();
+
+                $("#tbldata").find('tbody').append('<tr><td>' +  ticker + ' </td><td>' +  data.Close[4].toFixed(2) + '</td><td>' +  data.S1[4].toFixed(2) + '</td><td>' +  data.S2[4].toFixed(2) + '</td><td>' +  data.R1[4].toFixed(2) + '</td><td>' +  data.R2[4].toFixed(2) + '</td><td></td></tr>');
+                //$('#tbldata').find('tbody').append($("<tr><td></td></tr>").text(data.Close[4]));
+
+                    $('html, body').animate({
+                     scrollTop: $("#tbldata").offset().top + offset
+                   }, 200);*/
+
+                 //var down = price - data.S1[4].toFixed(2)
+                var down = price - data.S1[data.S1.length - 1].toFixed(2)
+                var up = data.R1[data.R1.length - 1].toFixed(2) - price
+
+
+                if (price < data.S1[data.S1.length - 1].toFixed(2)) {
+                    down = price - data.S2[data.S2.length - 1].toFixed(2)
+                }
+
+                if (price < data.S1[data.S1.length - 1].toFixed(2) && price < data.S2[data.S2.length - 1].toFixed(2) && price > data.S3[data.S3.length - 1].toFixed(2) ) {
+                   down = price - data.S3[4].toFixed(2)
+                }
+
+                if (price < data.S1[data.S1.length - 1].toFixed(2) && price < data.S2[data.S2.length - 1].toFixed(2) && price <= data.S3[data.S3.length - 1].toFixed(2) ) {
+                   down = 0.00
+                }
+
+
+                if (price > data.R1[data.R1.length - 1].toFixed(2)) {
+                    up = data.R2[data.R2.length - 1].toFixed(2) - price
+                }
+
+                if (price > data.R1[data.R1.length - 1].toFixed(2) && price > data.R2[data.R2.length - 1].toFixed(2) && price < data.R3[data.R3.length - 1].toFixed(2) ) {
+                    up = data.R3[data.R3.length - 1].toFixed(2) - price
+                }
+
+                if (price > data.R1[data.R1.length - 1].toFixed(2) && price > data.R2[data.R2.length - 1].toFixed(2) && price >= data.R3[data.R3.length - 1].toFixed(2) ) {
+                    up = 0.00
+                }
+
+                var risk_reward = up/down;
+                var stoploss = price - 1 * atr;
+
+                if(risk_reward.toFixed(2) >= 2){
+                    $("#riskreward").css( "background-color", "green");
+                }
+
+                 $("#price").val(price);
+                 $("#sone").val(data.S1[4].toFixed(2));
+                 $("#stwo").val(data.S2[4].toFixed(2));
+                 $("#rone").val(data.R1[4].toFixed(2));
+                 $("#rtwo").val(data.R2[4].toFixed(2));
+                 $("#down").val(down.toFixed(2));
+                 $("#up").val(up.toFixed(2));
+                 $("#atr").val(atr);
+                 $("#riskreward").val(risk_reward.toFixed(2));
+                 $("#pp").val(data.PP[4].toFixed(2));
+                 $("#stop").val(stoploss.toFixed(2));
+
+           })
+           .done(function() { console.log('getJSON request succeeded!'); })
+           .fail(function(jqXHR, textStatus, errorThrown) { console.log('getJSON request failed! ' + textStatus); });
+
+
+
+    });
+
+
+ function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+
+  $('#myscreener').on('click', function() {
+         console.log('getJSON request succeeded! #myscreener');
+
+         $.getJSON('{% url "custom_screener" %}',{
+                url: $("#url").val(),
+           },
+           function(data) {
+
+               //if (data.length > 0){
+               if (!isEmpty(data)){
+                  $("#tickertbl tbody tr").remove();
+                  //$("#tickertbl thead tr").remove();
+
+                  $("#tickertbl thead tr").find('th').remove();
+
+                  //$("th").remove(".text-center");
+
+                  //$("#tickertbl").find('thead').append('<tr></tr>')
+
+
+                    var columnsIn = data[0];
+                    var i = 0;
+                    //for(var key in columnsIn){
+                    for(var key in data){
+                        //console.log(key); // here is your column name you are looking for
+
+                        //if (key.indexOf("0") == -1)
+                        if (i != 0)
+                        {
+                          console.log(key)
+                          $("#tickertbl thead tr").append('<th class="text-center" scope="col">'+ key +'</th>')
+                        }
+                        i++;
+
+                    }
+
+                    /*for (var i = 0; i < data.length; i++ ) {
+                        $("#tickertbl tbody").append('<tr></tr>');
+                    }*/
+
+                        for (var key in data) {
+                            if (data.hasOwnProperty(key)) {
+                                //console.log(key + " -> " + data[key]);
+                                var values = data[key];
+                                for (var i = 0; i < values.length; i++ ){
+
+                                       if(key=='Ticker'){
+                                            $("#tickertbl tbody").append('<tr></tr>');
+                                       }
+                                       console.log("item " + " -> " + values[i]);
+                                }
+                            }
+                        }
+
+                }
+
+        })
+        .done(function() { console.log('getJSON request succeeded!'); })
+        .fail(function(jqXHR, textStatus, errorThrown) { console.log('getJSON request failed! ' + textStatus); });
+
+    });
+
+
+
+$(function() {
+  $("input.decimal").bind("change keyup input", function() {
+    var position = this.selectionStart - 1;
+    //remove all but number and .
+    var fixed = this.value.replace(/[^0-9\.]/g, "");
+    if (fixed.charAt(0) === ".")
+      //can't start with .
+      fixed = fixed.slice(1);
+
+    var pos = fixed.indexOf(".") + 1;
+    if (pos >= 0)
+      //avoid more than one .
+      fixed = fixed.substr(0, pos) + fixed.slice(pos).replace(".", "");
+
+    if (this.value !== fixed) {
+      this.value = fixed;
+      this.selectionStart = position;
+      this.selectionEnd = position;
+    }
+  });
+
+
+});
+
+</script>
+{% endblock content%}
+
+
+
