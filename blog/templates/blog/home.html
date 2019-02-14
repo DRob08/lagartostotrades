@@ -517,8 +517,8 @@ Custom media queries
     </div>
     <div class="card-footer">
         <div class="float-right">
-            <input class="btn btn-secondary" type="reset" value="Cancel">
-            <input class="btn btn-primary" type="button" value="Send">
+            <input id="clear" class="btn btn-secondary btn-lg" type="reset" value="Clear">
+            <input  id ="analyze" class="btn btn-primary btn-lg " type="button" value="Analyze">
         </div>
     </div>
 </div><!--/card-->
@@ -857,6 +857,41 @@ Custom media queries
 
 
     });
+
+
+    $('#clear').click(function() {
+            alert("Hello! I am an alert box!!");
+
+            $('#myticker').val("");
+
+               $("#sriskrew").css( "background-color", "#d1d1d1");
+                 $("#sprice").val(0.00);
+                 $("#svwap").val(0.00);
+                 $("#ss1").val(0.00);
+                 $("#ss2").val(0.00);
+                 $("#ss3").val(0.00);
+                 $("#sr1").val(0.00);
+                 $("#sr2").val(0.00);
+                 $("#sr3").val(0.00);
+                 $("#satr").val(0.00);
+                 $("#sdown").val(0.00);
+                 $("#sup").val(0.00);
+                 $("#sriskrew").val(0.00);
+                 $("#spp").val(0.00);
+                 $("#sstop").val(0.00);
+
+
+                 $(".form-check-input").each(function(i)
+                 {
+                      this.checked = false;
+                 });
+
+
+     });
+
+     $('#analyze').click(function() {
+            alert("Hello! 28888");
+     });
 
 
  function isEmpty(obj) {
