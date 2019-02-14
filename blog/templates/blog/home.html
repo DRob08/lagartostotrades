@@ -119,6 +119,138 @@ input[type="text"].decimal {
 
 }
 
+/* Small devices (landscape phones, 544px and up) */
+@media (min-width: 544px) {
+
+.price,
+.lead p {
+  font-weight: 400;
+  font-size: 12px;
+  display: inline-block;
+  line-height: 40px;
+  border: 0;
+  width: 125px;
+  height: 40px;
+}
+
+}
+
+/* Small devices (landscape phones, 300px and up) */
+@media (min-width: 300px) {
+
+    .price,
+    .lead p {
+      font-weight: 400;
+      font-size: 20px;
+      display: inline-block;
+      line-height: 40px;
+      border: 0;
+      width: 125px;
+      height: 40px;
+    }
+
+}
+
+/* Small devices (landscape phones, 544px and up) */
+@media (min-width: 544px) {
+
+       .price,
+    .lead p {
+      font-weight: 600;
+      font-size: 26px;
+      display: inline-block;
+      line-height: 40px;
+      border: 0;
+      width: 125px;
+      height: 40px;
+    }
+
+}
+
+/* Medium devices (tablets, 768px and up)
+The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {
+
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
+}
+
+
+
+/*
+::::::::::::::::::::::::::::::::::::::::::::::::::::
+Custom media queries
+*/
+
+@media (max-width: 950px) {
+
+}
+
+.fix {
+  position: absolute;
+  *position: relative; /*ie7*/
+  margin-left: -100px;
+  width: 100px;
+}
+
+.form-group {
+  position:relative;
+
+
+  & + .form-group {
+    margin-top: 20px;
+  }
+}
+
+.form-label {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  color: #999;
+  background-color: #fff;
+  z-index: 10;
+  transition: transform 150ms ease-out, font-size 150ms ease-out;
+}
+
+.focused .form-label {
+  transform: translateY(-125%);
+  font-size: .75em;
+}
+
+.form-input {
+  position: relative;
+  padding: 12px 0px 5px 0;
+  width: 80%;
+  outline: 0;
+  border: 0;
+  box-shadow: 0 1px 0 0 #e5e5e5;
+  transition: box-shadow 150ms ease-out;
+
+  &:focus {
+    box-shadow: 0 2px 0 0 blue;
+  }
+}
+
+.form-input.focus{
+    box-shadow: 0 2px 0 0 blue;
+}
+
+.form-input.filled {
+  box-shadow: 0 2px 0 0 lightgreen;
+}
+
+
+
+
+
 
 
     </style>
@@ -139,7 +271,7 @@ input[type="text"].decimal {
     </div>
 </article>
 {% endfor %}-->
-<div class="container mb-4">
+<!--<div class="container mb-4">
 
 
     <div class="input-group">
@@ -151,9 +283,253 @@ input[type="text"].decimal {
         </div>
     </div>
 
-</div>
+</div>-->
 
-<div class="table-responsive">
+<section class="py-5">
+    <div class="container" id="mytab">
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1><span class="text-primary">Bootstrap 4</span> - tab panel responsive example</h1>
+            </div>
+        </div><!-- e row -->
+
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-1-tab" data-toggle="tab" href="#nav-1" role="tab"
+               aria-controls="nav-1" aria-selected="true">SCREENER 1</a>
+            <a class="nav-item nav-link" id="nav-2-tab" data-toggle="tab" href="#nav-2" role="tab" aria-controls="nav-2"
+               aria-selected="false">SCREENER 2</a>
+            <a class="nav-item nav-link" id="nav-3-tab" data-toggle="tab" href="#nav-3" role="tab" aria-controls="nav-3"
+               aria-selected="false">SCREENER 3</a>
+        </div><!-- e nav nav-tabs -->
+
+        <div class="tab-content" id="nav-tabContent">
+
+            <div class="tab-pane fade show active" id="nav-1" role="tabpanel" aria-labelledby="nav-1-tab">
+                <!--<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>
+                <div class="row gallery">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2 mb-3">
+                            <a target="_blank" href="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 1" title="Lorem ipsum dolor sit amet 1"><img class="img-thumbnail" src="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 1"></a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2 mb-3">
+                            <a target="_blank" href="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 2" title="Lorem ipsum dolor sit amet 2"><img class="img-thumbnail" src="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 2"></a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2 mb-3">
+                            <a target="_blank" href="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 3" title="Lorem ipsum dolor sit amet 3"><img class="img-thumbnail" src="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 3"></a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2 mb-3">
+                            <a target="_blank" href="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 4" title="Lorem ipsum dolor sit amet 4"><img class="img-thumbnail" src="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 4"></a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2 mb-3">
+                            <a target="_blank" href="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 5" title="Lorem ipsum dolor sit amet 5"><img class="img-thumbnail" src="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 5"></a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-2 mb-3">
+                            <a target="_blank" href="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 6" title="Lorem ipsum dolor sit amet 6"><img class="img-thumbnail" src="http://via.placeholder.com/800x600/dddddd/eeeeee?text=Picture 6"></a>
+                            </div>
+                    </div>&lt;!&ndash; e row &ndash;&gt;-->
+
+                <div class="table-responsive mt-2">
+                    <table id="tickertbl" class="table table-hover">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" class="text-center">Ticker</th>
+                            <th scope="col" class="text-center">Float</th>
+                            <th scope="col" class="text-center">Float Short</th>
+                            <th scope="col" class="text-center">ATR</th>
+                            <th scope="col" class="text-center">RSI</th>
+                            <th scope="col" class="text-center">Avg Volume</th>
+                            <th scope="col" class="text-center">Price</th>
+                            <th scope="col" class="text-center">Volume</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for key in symbols %}
+                        <tr>
+                            <!--<th scope="row">3</th>-->
+                            <td class="text-center"><a id="tkrs" href="#myModal" class="btn btn-primary"
+                                                       data-toggle="modal">{{ key.Ticker }}</a></td>
+
+
+                            {% if key.Float|slice:":-1" < 21.00 %}
+                            <td class="text-center" bgcolor="#92a8d1">{{ key.Float }}M</td>
+                            {% else %}
+                            <td class="text-center">{{ key.Float}}M</td>
+                            {% endif %}
+
+
+                            <td class="text-center">{{ key.FloatShort }}</td>
+                            <td class="text-center">{{ key.ATR }}</td>
+                            <td class="text-center">{{ key.RSI }}</td>
+                            <td class="text-center">{{ key.AvgVolume }}</td>
+                            <td id="currentprice" class="text-center">{{ key.Price }}</td>
+
+                            <!--{% if  key.Price > 2 %}
+                                <td id="currentprice" class="text-center" bgcolor="#00FF00">{{ key.Price }}</td>
+                            {% else %}
+                                <td id="currentprice" class="text-center" >{{ key.Price }}</td>
+                            {% endif %}-->
+
+
+                            <td class="text-center">{{ key.Volume }}</td>
+
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-2" role="tabpanel" aria-labelledby="nav-2-tab">
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
+                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+                <p>sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
+                    vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+                    sanctus est Lorem ipsum dolor sit amet.</p>
+            </div>
+
+            <div class="tab-pane fade" id="nav-3" role="tabpanel" aria-labelledby="nav-3-tab">
+                <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
+                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet.</p>
+            </div>
+
+        </div><!-- e tab-content -->
+
+    </div><!-- e container and id mytab -->
+</section><!-- e section -->
+
+
+<div class="card card-outline-secondary">
+    <div class="card-header">
+        <h3 class="text-primary text-center mb-0">Tool Ticker Analyzer - TTA</h3>
+    </div>
+    <div class="card-body">
+        <div class="row mt-4">
+            <div class="col-sm-6 pb-3">
+                <div class="form-group">
+                    <label class="form-label text-primary" for="myticker">ENTER TICKER HERE</label>
+                    <input id="myticker" class="form-input" type="text" style="text-transform:uppercase"  />
+                </div>
+            </div>
+
+            <div class="col-sm-6 pb-3">
+                <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="optradio">15 Days
+                    </label>
+                </div>
+
+                <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="optradio">Intra Day 1 Min
+                    </label>
+                </div>
+
+                 <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="optradio">Intra Day 20 Min
+                    </label>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div class="row mt-4">
+            <div class="col-sm-3 pb-3">
+                <label for="price" class="control-label">Price</label>
+                <input class="decimal form-control" id="sprice" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="svwap" class="control-label">VWAP</label>
+                <input class="decimal form-control" id="svwap" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="sriskrew" class="control-label">Risk/Reward</label>
+                <input class="decimal form-control" id="sriskrew" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="sstop" class="control-label">Stop Loss</label>
+                <input class="decimal form-control" id="sstop" type="text">
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-sm-3 pb-3">
+                <label for="ss1" class="control-label">S1</label>
+                <input class="decimal form-control" id="ss1" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="ss2" class="control-label">S2</label>
+                <input class="decimal form-control" id="ss2" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="ss3" class="control-label">S3</label>
+                <input class="decimal form-control" id="ss3" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="sdown" class="control-label">Downside</label>
+                <input class="decimal form-control" id="sdown" type="text">
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-sm-3 pb-3">
+                <label for="sr1" class="control-label">R1</label>
+                <input class="decimal form-control" id="sr1" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="sr2" class="control-label">R2</label>
+                <input class="decimal form-control" id="sr2" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="sr3" class="control-label">R3</label>
+                <input class="decimal form-control" id="sr3" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="sup" class="control-label">Upside</label>
+                <input class="decimal form-control" id="sup" type="text">
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-sm-6 pb-3">
+                <label for="sr1" class="control-label">News</label>
+
+            </div>
+
+            <div class="col-sm-3 pb-3">
+                <label for="spp" class="control-label">Pivot Point</label>
+                <input class="decimal form-control" id="spp" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="satr" class="control-label">ATR</label>
+                <input class="decimal form-control" id="satr" type="text">
+            </div>
+        </div>
+
+    </div>
+    <div class="card-footer">
+        <div class="float-right">
+            <input class="btn btn-secondary" type="reset" value="Cancel">
+            <input class="btn btn-primary" type="button" value="Send">
+        </div>
+    </div>
+</div><!--/card-->
+</div>
+</div><!--/row-->
+</div><!--/col-->
+</div><!--/row-->
+</div><!--/container-->
+
+
+<!--<div class="table-responsive">
     <table id="tickertbl" class="table table-hover">
     <thead class="thead-dark">
     <tr>
@@ -171,7 +547,7 @@ input[type="text"].decimal {
 
     {% for key in symbols %}
     <tr>
-        <!--<th scope="row">3</th>-->
+        &lt;!&ndash;<th scope="row">3</th>&ndash;&gt;
         <td class="text-center" ><a id="tkrs" href="#myModal" class="btn btn-primary" data-toggle="modal">{{ key.Ticker }}</a></td>
 
 
@@ -188,11 +564,11 @@ input[type="text"].decimal {
         <td class="text-center">{{ key.AvgVolume }}</td>
         <td id="currentprice" class="text-center" >{{ key.Price }}</td>
 
-        <!--{% if  key.Price > 2 %}
+        &lt;!&ndash;{% if  key.Price > 2 %}
             <td id="currentprice" class="text-center" bgcolor="#00FF00">{{ key.Price }}</td>
         {% else %}
             <td id="currentprice" class="text-center" >{{ key.Price }}</td>
-        {% endif %}-->
+        {% endif %}&ndash;&gt;
 
 
         <td class="text-center">{{ key.Volume }}</td>
@@ -201,174 +577,175 @@ input[type="text"].decimal {
     </tr>
     {% endfor %}
     </tbody>
-</table> </div>
+</table> </div>-->
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
-<div class="modal-dialog modal-dialog-centered">
-     <div class="modal-content">
-<!--<div class="col-sm-6">-->
-    <div class="price-form">
-        <h2 class="mb-4" id="tkrh"></h2>
-          <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">Price: </label>
-                <!--<span class="help-text">Amount that you need to pay</span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="decimal price lead" name="price" type="text" id="price"  style="" />
-              </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!--<div class="col-sm-6">-->
+            <div class="price-form">
+                <h2 class="mb-4" id="tkrh"></h2>
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">Price: </label>
+                            <!--<span class="help-text">Amount that you need to pay</span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="decimal price lead" name="price" type="text" id="price" style=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">Risk/Reward Ratio: </label>
+                            <!--<span class="help-text">Amount that you need to pay</span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="decimal price lead" name="riskreward" type="text" id="riskreward" style=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">Stop Loss: </label>
+                            <!--<span class="help-text">Amount that you need to pay</span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="decimal price lead" name="stop" type="text" id="stop" style=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">PP: </label>
+                            <!--<span class="help-text">Amount that you need to pay</span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="decimal price lead" name="pp" type="text" id="pp" style=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">S1: </label>
+                            <!--<span class="help-text">Amount that you need to pay</span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <!-- <p class="price lead" id="total12"></p> -->
+                            <input class="decimal price lead" name="supportone" type="text" id="sone" style=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">S2: </label>
+                            <!--<span class="help-text">Amount that you need to pay</span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="decimal price lead" name="supporttwo" type="text" id="stwo" style=""/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">Downside: </label>
+                            <!--<span class="help-text"></span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="decimal price lead" name="down" type="text" id="down" style=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">R1: </label>
+                            <!--<span class="help-text">Amount that you need to pay</span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="decimal price lead" name="ressistanceone" type="text" id="rone" style=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">R2: </label>
+                            <!--<span class="help-text"></span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="decimal price lead" name="ressistancetwo" type="text" id="rtwo" style=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">Upside: </label>
+                            <!--<span class="help-text"></span>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="decimal price lead" name="up" type="text" id="up" style=""/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group mb-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount_amirol" class="control-label">ATR: </label>
+                            <span class="help-text"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" id="amount_amirol" class="form-control">
+                            <input class="price lead decimal" name="totalprice52" type="text" id="atr" style=""/>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:30px"></div>
+                <hr class="style">
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Calculate <span
+                                class="glyphicon glyphicon-chevron-right"></span></button>
+                    </div>
+                </div>
+
             </div>
-          </div>
 
-        <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">Risk/Reward Ratio: </label>
-                <!--<span class="help-text">Amount that you need to pay</span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="decimal price lead" name="riskreward" type="text" id="riskreward"  style="" />
-              </div>
-            </div>
-          </div>
-
-         <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">Stop Loss: </label>
-                <!--<span class="help-text">Amount that you need to pay</span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="decimal price lead" name="stop" type="text" id="stop"  style="" />
-              </div>
-            </div>
-          </div>
-
-         <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">PP: </label>
-                <!--<span class="help-text">Amount that you need to pay</span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="decimal price lead" name="pp" type="text" id="pp"  style="" />
-              </div>
-            </div>
-          </div>
-          <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">S1: </label>
-                <!--<span class="help-text">Amount that you need to pay</span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <!-- <p class="price lead" id="total12"></p> -->
-                <input class="decimal price lead" name="supportone" type="text" id="sone"  style="" />
-              </div>
-            </div>
-          </div>
-          <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">S2: </label>
-                <!--<span class="help-text">Amount that you need to pay</span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="decimal price lead" name="supporttwo" type="text" id="stwo"  style="" />
-              </div>
-            </div>
-          </div>
-
-
-               <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">Downside: </label>
-                <!--<span class="help-text"></span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="decimal price lead" name="down" type="text" id="down" style="" />
-              </div>
-            </div>
-          </div>
-
-            <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">R1: </label>
-                <!--<span class="help-text">Amount that you need to pay</span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="decimal price lead" name="ressistanceone" type="text" id="rone"  style="" />
-              </div>
-            </div>
-          </div>
-
-            <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">R2: </label>
-                <!--<span class="help-text"></span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="decimal price lead" name="ressistancetwo" type="text" id="rtwo" style="" />
-              </div>
-            </div>
-          </div>
-
-         <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">Upside: </label>
-                <!--<span class="help-text"></span>-->
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="decimal price lead" name="up" type="text" id="up" style="" />
-              </div>
-            </div>
-          </div>
-
-
-            <div class="form-group mb-2">
-            <div class="row">
-              <div class="col-sm-6">
-                <label for="amount_amirol" class="control-label">ATR: </label>
-                <span class="help-text"></span>
-              </div>
-              <div class="col-sm-6">
-                <input type="hidden" id="amount_amirol" class="form-control">
-                <input class="price lead decimal" name="totalprice52" type="text" id="atr"  style="" />
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top:30px"></div>
-          <hr class="style">
-
-          <div class="form-group">
-            <div class="col-sm-12">
-              <button type="submit" class="btn btn-primary btn-lg btn-block">Calculate <span class="glyphicon glyphicon-chevron-right"></span></button>
-            </div>
-          </div>
-
+            <!--</div>-->
         </div>
-
-<!--</div>-->
-</div>
-</div>
+    </div>
 </div>
 
 <script>
@@ -434,7 +811,7 @@ input[type="text"].decimal {
                 }
 
                 if (price < data.S1[data.S1.length - 1].toFixed(2) && price < data.S2[data.S2.length - 1].toFixed(2) && price > data.S3[data.S3.length - 1].toFixed(2) ) {
-                   down = price - data.S3[4].toFixed(2)
+                   down = price - data.S3[data.S3.length - 1 ].toFixed(2)
                 }
 
                 if (price < data.S1[data.S1.length - 1].toFixed(2) && price < data.S2[data.S2.length - 1].toFixed(2) && price <= data.S3[data.S3.length - 1].toFixed(2) ) {
@@ -461,16 +838,16 @@ input[type="text"].decimal {
                     $("#riskreward").css( "background-color", "green");
                 }
 
-                 $("#price").val(price);
-                 $("#sone").val(data.S1[4].toFixed(2));
-                 $("#stwo").val(data.S2[4].toFixed(2));
-                 $("#rone").val(data.R1[4].toFixed(2));
-                 $("#rtwo").val(data.R2[4].toFixed(2));
+                  $("#price").val(price);
+                 $("#sone").val(data.S1[data.S1.length - 1].toFixed(2));
+                 $("#stwo").val(data.S2[data.S2.length - 1].toFixed(2));
+                 $("#rone").val(data.R1[data.R1.length - 1].toFixed(2));
+                 $("#rtwo").val(data.R2[data.R2.length - 1].toFixed(2));
                  $("#down").val(down.toFixed(2));
                  $("#up").val(up.toFixed(2));
                  $("#atr").val(atr);
                  $("#riskreward").val(risk_reward.toFixed(2));
-                 $("#pp").val(data.PP[4].toFixed(2));
+                 $("#pp").val(data.PP[data.PP.length - 1].toFixed(2));
                  $("#stop").val(stoploss.toFixed(2));
 
            })
@@ -578,6 +955,27 @@ $(function() {
 
 
 });
+
+$('input').focus(function(){
+  $(this).parents('.form-group').addClass('focused');
+});
+
+$('input').blur(function(){
+  var inputValue = $(this).val();
+  if ( inputValue == "" ) {
+    $(this).removeClass('filled');
+    $(this).parents('.form-group').removeClass('focused');
+  } else {
+    $(this).addClass('filled');
+  }
+})
+
+
+
+
+
+
+
 
 </script>
 {% endblock content%}
