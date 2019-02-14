@@ -15,6 +15,7 @@ import time
 import io
 import re
 from finviz.screener import Screener
+from alpha_vantage.timeseries import TimeSeries
 
 
 posts = [
@@ -76,8 +77,23 @@ def get_now_epoch():
     # @see https://www.linuxquestions.org/questions/programming-9/python-datetime-to-epoch-4175520007/#post5244109
     return int(time.time())
 
+def PPSR2(data):
+
+    PP = pd.Series((data['high'] + data['low'] + data['close']) / 3)
+    R1 = pd.Series(2 * PP - data['low'])
+    S1 = pd.Series(2 * PP - data['high'])
+    R2 = pd.Series(PP + data['high'] - data['low'])
+    S2 = pd.Series(PP - data['high'] + data['low'])
+    R3 = pd.Series(data['high'] + 2 * (PP - data['low']))
+    S3 = pd.Series(data['low'] - 2 * (data['high'] - PP))
+    psr = {'PP':PP, 'R1':R1, 'S1':S1, 'R2':R2, 'S2':S2, 'R3':R3, 'S3':S3}
+    PSR = pd.DataFrame(psr)
+    data = data.join(PSR)
+    return data
+
 
 def PPSR(data):
+
     PP = pd.Series((data['High'] + data['Low'] + data['Close']) / 3)
     R1 = pd.Series(2 * PP - data['Low'])
     S1 = pd.Series(2 * PP - data['High'])
@@ -85,7 +101,9 @@ def PPSR(data):
     S2 = pd.Series(PP - data['High'] + data['Low'])
     R3 = pd.Series(data['High'] + 2 * (PP - data['Low']))
     S3 = pd.Series(data['Low'] - 2 * (data['High'] - PP))
-    psr = {'PP':PP, 'R1':R1, 'S1':S1, 'R2':R2, 'S2':S2, 'R3':R3, 'S3':S3}
+
+    VWAP = (data.Volume * (data.High + data.Low) / 2).cumsum() / data.Volume.cumsum()
+    psr = {'PP':PP, 'R1':R1, 'S1':S1, 'R2':R2, 'S2':S2, 'R3':R3, 'S3':S3, 'VWAP':VWAP}
     PSR = pd.DataFrame(psr)
     data = data.join(PSR)
     return data
@@ -108,6 +126,9 @@ def data_calculations(request):
 
         try:
 
+            ts = TimeSeries(key='G3AXVEKKRY7RYJUD', output_format='pandas')
+            data, meta_data = ts.get_intraday(symbol=stock, interval='1min', outputsize='full')
+
             cookie, crumb = get_cookie_crumb(stock)
 
             url = "https://query1.finance.yahoo.com/v7/finance/download/%s?period1=%s&period2=%s&interval=1d&events=history&crumb=%s" % (
@@ -125,6 +146,20 @@ def data_calculations(request):
             # compute and print the data
 
             LL = PPSR(df)
+
+            data.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
+
+            data['vwap_pandas'] = (data.Volume * (data.High + data.Low) / 2).cumsum() / data.Volume.cumsum()
+
+            v = data.Volume.values
+            h = data.High.values
+            l = data.Low.values
+
+            data['vwap_numpy'] = np.cumsum(v * (h + l) / 2) / np.cumsum(v)
+
+            # data['vwap_numba'] = vwap()
+
+            MM = PPSR(data)
 
             dict = LL.to_dict('list')
 
@@ -297,6 +332,8 @@ def home(request):
     df_finviz[["Float"]] = df_finviz[["Float"]].apply(pd.to_numeric)
 
     df_finviz[["Price"]] = df_finviz[["Price"]].apply(pd.to_numeric)
+
+    df_finviz.sort_values(by=['Price'], inplace=True, ascending=True)
 
     dict = df_finviz.to_dict(orient='records')
 
