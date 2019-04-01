@@ -1,5 +1,5 @@
 {% extends "blog/base.html" %}
-
+{% load static %}
 {% block content %}
 
 <head>
@@ -248,7 +248,83 @@ Custom media queries
 }
 
 
+.form-control{
+    font-weight: 400;
+    font-size: 22px;
+}
 
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+}
+
+.anyClass {
+  height:200px;
+  overflow-y: scroll;
+}
+
+.fixed_header{
+
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.fixed_header tbody{
+  display:block;
+  width: 100%;
+  overflow: auto;
+  height: 200px;
+  overflow-y: scroll;
+}
+
+.fixed_header thead tr {
+   display: block;
+}
+
+.fixed_header thead {
+  background: #5f788a!important;
+  color:#fff;
+}
+
+.fixed_header th, .fixed_header td {
+  padding: 2px;
+  text-align: center;
+  width: 300px;
+  border-color: #5f788a!important;
+}
+
+.fixed_header tr:hover {
+  background-color: #5f788a!important;
+}
+
+.fixed_header thead tr:hover {
+   background-color: #5f788a!important;
+}
 
 
 
@@ -404,39 +480,93 @@ Custom media queries
 </section><!-- e section -->
 
 
+<hr class="my-4">
+
 <div class="card card-outline-secondary">
     <div class="card-header">
-        <h3 class="text-primary text-center mb-0">Tool Ticker Analyzer - TTA</h3>
+        <h3 class="text-primary text-center mb-0">Ticker Analyzer Tool - TAT</h3>
     </div>
     <div class="card-body">
         <div class="row mt-4">
             <div class="col-sm-6 pb-3">
                 <div class="form-group">
                     <label class="form-label text-primary" for="myticker">ENTER TICKER HERE</label>
-                    <input id="myticker" class="form-input" type="text" style="text-transform:uppercase"  />
+                    <input id="myticker" class="form-input" type="text" style="text-transform:uppercase"/>
                 </div>
             </div>
 
-            <div class="col-sm-6 pb-3">
-                <div class="form-check-inline">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="optradio">15 Days
-                    </label>
+
+            <div class="col-sm-3 pb-3">
+                <!-- Group of default radios - option 1 -->
+                <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="defaultGroupExample1"
+                           name="groupOfDefaultRadios" value="15D">
+                    <label class="custom-control-label" for="defaultGroupExample1">15 days</label>
                 </div>
 
-                <div class="form-check-inline">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="optradio">Intra Day 1 Min
-                    </label>
+                <!-- Group of default radios - option 2 -->
+                <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="defaultGroupExample2"
+                           name="groupOfDefaultRadios" value="5">
+                    <label class="custom-control-label" for="defaultGroupExample2">Intra Day 5 Min</label>
                 </div>
 
-                 <div class="form-check-inline">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="optradio">Intra Day 20 Min
-                    </label>
+                <!-- Group of default radios - option 3 -->
+                <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" id="defaultGroupExample3"
+                           name="groupOfDefaultRadios" value="15">
+                    <label class="custom-control-label" for="defaultGroupExample3">Intra Day 15 Min</label>
+                </div>
+            </div>
+
+
+            <div class="col-sm-3 pb-3">
+                <div class="slidecontainer">
+                    <label class=" text-primary" for="myRange">MULTIPLIER(X)= <span id="demo"></span></label>
+                    <input type="range" min="1" max="5" value="1" class="slider" id="myRange" step="1">
+
                 </div>
 
 
+            </div>
+
+
+        </div>
+        <div class="row mt-4">
+            <div class="col-sm-3 pb-3">
+                <div class="form-group">
+                    <label class="form-label text-primary" for="sequity">ENTER EQUITY $</label>
+                    <input id="sequity" class="form-input form-input-decimal" type="text"
+                           style="text-transform:uppercase"/>
+                </div>
+
+            </div>
+            <div class="col-sm-3 pb-3">
+                <div class="form-group">
+                    <label class="form-label text-primary" for="spercent">ENTER RISK %</label>
+                    <input id="spercent" class="form-input form-input-decimal" type="text"
+                           style="text-transform:uppercase"/>
+                </div>
+            </div>
+
+            <div class="col-sm-3 pb-3">
+                <label for="sriskunit" class="control-label">Risk Unit</label>
+                <input class=" decimal form-control" id="sriskunit" placeholder="" type="text">
+            </div>
+
+            <div class="col-sm-3 pb-3">
+                <label for="sposition" class="control-label">Position</label>
+                <input class="decimal form-control" id="sposition" placeholder="" type="text">
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-sm-12 pb-3">
+                <div class="float-right">
+                    <input id="clear" class="btn btn-secondary btn-lg" type="reset" value="Clear">
+                    <!--<input id="analyze" class="btn btn-primary btn-lg " type="button" value="Analyze" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing Order">-->
+                    <button id="analyze" type="submit" class="btn btn-primary btn-lg">Analyze</button>
+                </div>
             </div>
         </div>
 
@@ -500,7 +630,47 @@ Custom media queries
 
         <div class="row mt-4">
             <div class="col-sm-6 pb-3">
-                <label for="sr1" class="control-label">News</label>
+
+                <h4 class="text-primary text-center mb-0">Intra Day 1 Min Volume</h4>
+
+                <div class="table-responsive-sm mt-2 text-center">
+                    <table id="voltbl" class="fixed_header table table-striped table-dark table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Date/Time</th>
+                            <th scope="col" class="text-center">Volume</th>
+                            <th scope="col" class="text-center">Close</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+
+                    <button id="btnchart" class="btn btn-primary" data-target="#modalIMG" data-toggle="modal" href="#">
+                        <i class="fa fa-bar-chart"> </i>Candlestick Chart
+                    </button>
+                </div>
+
+                <!-- BELOW IS THE NEW TABLE FOR SEC FILLINGS -->
+
+                <h4 class="text-primary text-center mt-4">SEC Fillings</h4>
+
+                <div class="table-responsive-sm mt-2 text-center">
+                    <table id="sectbl" class="fixed_header table table-striped table-dark table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Filings</th>
+                            <th scope="col" class="text-center">Description</th>
+                            <th scope="col" class="text-center">Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
 
             </div>
 
@@ -511,15 +681,44 @@ Custom media queries
             <div class="col-sm-3 pb-3">
                 <label for="satr" class="control-label">ATR</label>
                 <input class="decimal form-control" id="satr" type="text">
+
             </div>
         </div>
 
+
+       <!-- <div class="row mt-2">
+             <div class="col-sm-6 pb-3">
+
+             </div>
+             <div class="col-sm-6 pb-3">
+
+                <h4 class="text-primary text-center mb-0">SEC Fillings</h4>
+
+                <div class="table-responsive-sm mt-2 text-center">
+                    <table id="sectbl" class="fixed_header table table-striped table-dark table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Filings</th>
+                            <th scope="col" class="text-center">Description</th>
+                            <th scope="col" class="text-center">Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>-->
+
+
+
     </div>
     <div class="card-footer">
-        <div class="float-right">
-            <input id="clear" class="btn btn-secondary btn-lg" type="reset" value="Clear">
-            <input  id ="analyze" class="btn btn-primary btn-lg " type="button" value="Analyze">
-        </div>
+        <!-- <div class="float-right">
+             <input id="clear" class="btn btn-secondary btn-lg" type="reset" value="Clear">
+             <input  id ="analyze" class="btn btn-primary btn-lg " type="button" value="Analyze">
+         </div> -->
     </div>
 </div><!--/card-->
 </div>
@@ -748,6 +947,22 @@ Custom media queries
     </div>
 </div>
 
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="modalIMG" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body mb-0 p-0 text-center">
+                <img id="myimg" src="{% static '/mychart.png' %}" alt="" style="width:80%">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-primary btn-rounded btn-md ml-4 text-center" data-dismiss="modal"
+                        type="button">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     <!--$(document).ready(function(){-->
 
@@ -802,11 +1017,13 @@ Custom media queries
                    }, 200);*/
 
                  //var down = price - data.S1[4].toFixed(2)
+                price = parseFloat(data.Price).toFixed(2)
                 var down = price - data.S1[data.S1.length - 1].toFixed(2)
                 var up = data.R1[data.R1.length - 1].toFixed(2) - price
 
 
-                if (price < data.S1[data.S1.length - 1].toFixed(2)) {
+
+                if (price <= data.S1[data.S1.length - 1].toFixed(2)) {
                     down = price - data.S2[data.S2.length - 1].toFixed(2)
                 }
 
@@ -819,7 +1036,7 @@ Custom media queries
                 }
 
 
-                if (price > data.R1[data.R1.length - 1].toFixed(2)) {
+                if (price >= data.R1[data.R1.length - 1].toFixed(2)) {
                     up = data.R2[data.R2.length - 1].toFixed(2) - price
                 }
 
@@ -857,41 +1074,6 @@ Custom media queries
 
 
     });
-
-
-    $('#clear').click(function() {
-            alert("Hello! I am an alert box!!");
-
-            $('#myticker').val("");
-
-               $("#sriskrew").css( "background-color", "#d1d1d1");
-                 $("#sprice").val(0.00);
-                 $("#svwap").val(0.00);
-                 $("#ss1").val(0.00);
-                 $("#ss2").val(0.00);
-                 $("#ss3").val(0.00);
-                 $("#sr1").val(0.00);
-                 $("#sr2").val(0.00);
-                 $("#sr3").val(0.00);
-                 $("#satr").val(0.00);
-                 $("#sdown").val(0.00);
-                 $("#sup").val(0.00);
-                 $("#sriskrew").val(0.00);
-                 $("#spp").val(0.00);
-                 $("#sstop").val(0.00);
-
-
-                 $(".form-check-input").each(function(i)
-                 {
-                      this.checked = false;
-                 });
-
-
-     });
-
-     $('#analyze').click(function() {
-            alert("Hello! 28888");
-     });
 
 
  function isEmpty(obj) {
@@ -988,6 +1170,26 @@ $(function() {
     }
   });
 
+   $("input.form-input-decimal").bind("change keyup input", function() {
+    var position = this.selectionStart - 1;
+    //remove all but number and .
+    var fixed = this.value.replace(/[^0-9\.]/g, "");
+    if (fixed.charAt(0) === ".")
+      //can't start with .
+      fixed = fixed.slice(1);
+
+    var pos = fixed.indexOf(".") + 1;
+    if (pos >= 0)
+      //avoid more than one .
+      fixed = fixed.substr(0, pos) + fixed.slice(pos).replace(".", "");
+
+    if (this.value !== fixed) {
+      this.value = fixed;
+      this.selectionStart = position;
+      this.selectionEnd = position;
+    }
+  });
+
 
 });
 
@@ -1003,10 +1205,282 @@ $('input').blur(function(){
   } else {
     $(this).addClass('filled');
   }
-})
+});
+
+
+$('#btnchart').click(function() {
+
+    d = new Date();
+    $("#myimg").attr("src", "/static/mychart.png?"+d.getTime());
+
+ });
+
+
+$('#clear').click(function() {
+
+
+            $('#myticker').val("");
+            $('#spercent').val("");
+            $('#sequity').val("");
+
+            $("#voltbl tbody tr").remove();
+            $("#sectbl tbody tr").remove();
+
+
+               $("#sriskrew").css( "background-color", "#d1d1d1");
+                 $("#sprice").val(0.00);
+                 $("#svwap").val(0.00);
+                 $("#ss1").val(0.00);
+                 $("#ss2").val(0.00);
+                 $("#ss3").val(0.00);
+                 $("#sr1").val(0.00);
+                 $("#sr2").val(0.00);
+                 $("#sr3").val(0.00);
+                 $("#satr").val(0.00);
+                 $("#sdown").val(0.00);
+                 $("#sup").val(0.00);
+                 $("#sriskrew").val(0.00);
+                 $("#spp").val(0.00);
+                 $("#sstop").val(0.00);
+                 $("#sposition").val(0);
+                 $("#sriskunit").val(0.00);
+
+
+                 $(".custom-control-input").each(function(i)
+                 {
+                      this.checked = false;
+                 });
+
+     });
+
+ $('#analyze').click(function() {
+
+         var ticker = $('#myticker').val();
+         var risk_percentage = $('#spercent').val();
+         var equity = $('#sequity').val();
+         var radioValue = $("input[name='groupOfDefaultRadios']:checked").val();
+         var slider = document.getElementById("myRange");
+         var risk_unit;
+
+         $("#sriskrew").css( "background-color", "#d1d1d1");
+         $("#sprice").val(0.00);
+         $("#svwap").val(0.00);
+         $("#ss1").val(0.00);
+         $("#ss2").val(0.00);
+         $("#ss3").val(0.00);
+         $("#sr1").val(0.00);
+         $("#sr2").val(0.00);
+         $("#sr3").val(0.00);
+         $("#satr").val(0.00);
+         $("#sdown").val(0.00);
+         $("#sup").val(0.00);
+         $("#sriskrew").val(0.00);
+         $("#spp").val(0.00);
+         $("#sstop").val(0.00);
+         $("#sposition").val(0);
+         $("#sriskunit").val(0.00);
+
+         $("#voltbl tbody tr").remove();
+         $("#sectbl tbody tr").remove();
+
+
+        var $this = $(this);
+        var loadingText = '<i class="fa fa-circle-o-notch fa-spin"></i> loading...';
 
 
 
+
+
+         if(radioValue && ticker)
+         {
+            if ($(this).html() !== loadingText) {
+                $this.data('original-text', $(this).html());
+                $this.html(loadingText);
+            }
+            //alert("TESTING IF" );
+            $.getJSON('{% url "data_analysis" %}',{
+              tcker : ticker,
+              radiovalue: radioValue
+            },
+            function(data) {
+
+
+                //var price = data.Close[data.Close.length - 1].toFixed(2);
+                var price = parseFloat(data.Price).toFixed(2)
+                var down = price - data.S1[data.S1.length - 1].toFixed(2);
+                var up = data.R1[data.R1.length - 1].toFixed(2) - price;
+                var total_position;
+
+                if(equity && risk_percentage)
+                {
+                    risk_unit = equity * (risk_percentage / 100);
+                    $("#sriskunit").val(risk_unit.toFixed(2));
+                    total_position = Math.floor(risk_unit / (slider.value * data.AvgTR[data.AvgTR.length - 1].toFixed(4)))
+                    $("#sposition").val(total_position);
+
+                }
+
+                if (price <= data.S1[data.S1.length - 1].toFixed(2)) {
+                    down = price - data.S2[data.S2.length - 1].toFixed(2)
+                }
+
+                if (price < data.S1[data.S1.length - 1].toFixed(2) && price < data.S2[data.S2.length - 1].toFixed(2) && price > data.S3[data.S3.length - 1].toFixed(2) ) {
+                   down = price - data.S3[data.S3.length - 1 ].toFixed(2)
+                }
+
+                if (price < data.S1[data.S1.length - 1].toFixed(2) && price < data.S2[data.S2.length - 1].toFixed(2) && price <= data.S3[data.S3.length - 1].toFixed(2) ) {
+                   down = 0.00
+                }
+
+
+                if (price >= data.R1[data.R1.length - 1].toFixed(2)) {
+                    up = data.R2[data.R2.length - 1].toFixed(2) - price
+                }
+
+                if (price >= data.R1[data.R1.length - 1].toFixed(2) && price >= data.R2[data.R2.length - 1].toFixed(2) && price < data.R3[data.R3.length - 1].toFixed(2) ) {
+                    up = data.R3[data.R3.length - 1].toFixed(2) - price
+                }
+
+                if (price > data.R1[data.R1.length - 1].toFixed(2) && price > data.R2[data.R2.length - 1].toFixed(2) && price >= data.R3[data.R3.length - 1].toFixed(2) ) {
+                    up = 0.00
+                }
+
+                var risk_reward = up/down;
+                var stoploss = price - slider.value * data.AvgTR[data.AvgTR.length - 1].toFixed(4);
+
+                if(risk_reward.toFixed(2) >= 2){
+                    $("#sriskrew").css( "background-color", "green");
+                }
+
+
+                $("#svwap").val(data.VWAP[data.VWAP.length - 1].toFixed(2));
+                $("#sprice").val(data.Close[data.Close.length - 1].toFixed(2));
+                $("#ss1").val(data.S1[data.S1.length - 1].toFixed(2));
+                $("#ss2").val(data.S2[data.S2.length - 1].toFixed(2));
+                $("#ss3").val(data.S3[data.S3.length - 1].toFixed(2));
+                $("#sr1").val(data.R1[data.R1.length - 1].toFixed(2));
+                $("#sr2").val(data.R2[data.R2.length - 1].toFixed(2));
+                $("#sr3").val(data.R3[data.R3.length - 1].toFixed(2));
+                $("#spp").val(data.PP[data.PP.length - 1].toFixed(2));
+                $("#satr").val(data.AvgTR[data.AvgTR.length - 1].toFixed(4));
+
+                 $("#sdown").val(down.toFixed(2));
+                 $("#sup").val(up.toFixed(2));
+                 $("#sriskrew").val(risk_reward.toFixed(2));
+                 $("#sstop").val(stoploss.toFixed(2));
+                 $this.html($this.data('original-text'));
+
+
+            })
+            .done(function() { console.log('getJSON request succeeded!');
+            $this.html($this.data('original-text'));})
+            .fail(function(jqXHR, textStatus, errorThrown) { console.log('getJSON request failed! ' + textStatus);
+            $this.html($this.data('original-text'));});
+
+            displayVolume(ticker);
+
+            displaySECFillings(ticker);
+
+         }else {
+                alert("Enter Ticker and select Time frame" );
+        }
+
+         //alert("Hello! RADIO-----" + radioValue + " ---" + ticker + " ---R" + risk_percentage + " Equity " + equity  );
+ });
+
+function displayVolume(myticker) {
+
+      $.getJSON('{% url "get_volume_intraday" %}',{
+              tcker : myticker
+
+            },
+            function(data) {
+
+                console.log(data.columns[0]);
+                console.log(data.data[0]);
+
+                var current_close = data.data[0][0].toFixed(2)
+
+                 for (var i = 0; i < data.data.length; i++ ) {
+
+                        current_close = data.data[i][0];
+
+                        if(data.data[i][1] > 45000) {
+                              if (i <= data.data.length - 2 && current_close > data.data[i + 1][0]) {
+                                    $("#voltbl tbody").append('<tr><td class="text-center">'+ data.index[i] + '</td> <td class="text-center" bgcolor="#40E0D0" >' + data.data[i][1] + ' </td> ' + '</td> <td class="text-center" bgcolor="#40E0D0">' + data.data[i][0] + ' </td></tr>');
+                              }
+                              else {
+                                  $("#voltbl tbody").append('<tr><td class="text-center">'+ data.index[i] + '</td> <td class="text-center" bgcolor="#40E0D0" >' + data.data[i][1] + ' </td> ' + '</td> <td class="text-center">' + data.data[i][0] + ' </td></tr>');
+                              }
+
+                        }else{
+
+                             if (i <= data.data.length - 2 && current_close > data.data[i + 1][0]) {
+                                  $("#voltbl tbody").append('<tr><td class="text-center">'+ data.index[i] + '</td> <td class="text-center">' + data.data[i][1] + ' </td> ' + '</td> <td class="text-center" bgcolor="#40E0D0">' + data.data[i][0] + ' </td></tr>');
+                             }
+                             else {
+                                 $("#voltbl tbody").append('<tr><td class="text-center">'+ data.index[i] + '</td> <td class="text-center">' + data.data[i][1] + ' </td> ' + '</td> <td class="text-center">' + data.data[i][0] + ' </td></tr>');
+                             }
+                        }
+
+                 }
+
+                $.each(data,function(index,value){
+                   // console.log(index,  value);
+                    console.log(value);
+                });
+
+              $.each(data, function() {
+                  $.each(this, function(k, v) {
+                    console.log(k, v);
+                  });
+                });
+
+
+            })
+            .done(function() { console.log('getJSON request displayVolume succeeded!'); })
+            .fail(function(jqXHR, textStatus, errorThrown) { console.log('getJSON request failed displayVolume ! ' + textStatus); });
+
+}
+
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+
+
+function displaySECFillings(myticker) {
+
+            $.getJSON('{% url "load_sec_fillings" %}',{
+              tcker : myticker
+
+            },
+            function(data) {
+                console.log(data.columns[0]);
+
+
+                for (var i = 0; i < data.data.length; i++ ) {
+                    $("#sectbl tbody").append('<tr><td class="text-center">'+ data.data[i][0] + '</td> <td class="text-center">' + data.data[i][2] + ' </td> ' + '</td> <td class="text-center">' + data.data[i][3] + ' </td></tr>');
+                }
+
+
+
+
+
+
+            })
+            .done(function() {
+            					console.log('getJSON request displaySECFillings succeeded!');
+            				 })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+            					console.log('getJSON request failed displaySECFillings ! ' + textStatus);
+            				 });
+
+}
 
 
 
