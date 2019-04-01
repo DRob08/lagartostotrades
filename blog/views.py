@@ -25,6 +25,11 @@ from datetime import datetime
 from pytz import timezone
 import itertools
 import warnings
+from matplotlib import style
+import os
+from bs4 import BeautifulSoup
+import re
+
 
 from pandas.tseries.offsets import BDay
 
@@ -45,6 +50,8 @@ posts = [
 
 
 ]
+
+my_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def get_cookie_crumb(symbol):
@@ -156,11 +163,13 @@ def data_analysis(request):
 
                 dict = LL.to_dict('list')
 
+                dict['Price'] = df["Close"].iloc[-1]
+
             else:
                 ts = TimeSeries(key='G3AXVEKKRY7RYJUD', output_format='pandas')
                 data, meta_data = ts.get_intraday(symbol=stock, interval=intval, outputsize='compact')
 
-                data_min, meta_data_min = ts.get_intraday(symbol=stock, interval='1min', outputsize='compact')
+                # data_min, meta_data_min = ts.get_intraday(symbol=stock, interval='1min', outputsize='compact')
 
                 data.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
 
@@ -172,6 +181,10 @@ def data_analysis(request):
                 MM = PPSR(data)
 
                 dict = MM.to_dict('list')
+
+                my_curr_stock = get_current_price(stock)
+
+                dict['Price'] = my_curr_stock['Price']
 
             return JsonResponse(dict)
 
@@ -186,54 +199,86 @@ def data_analysis(request):
 def graph_data(data, stock):
     fontsizes = itertools.cycle([8, 16, 24, 32])
 
-    fig = plt.figure(facecolor='#07000d')
+    # df_volume = data['Volume'].resample('10D').sum()
+
+    # data.index = pd.to_datetime(data.index, unit='s')
+
+    # style.use('dark_background')
+    style.use('seaborn-bright')
+
+    data2 = data.copy()
+
+    data2.reset_index(inplace=True)
+
+    data2.columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume']
+    data2['Date'] = pd.to_datetime(data2['Date'])
+    data2['Date'] = data2['Date'].map(mdates.date2num)
+
+    # df_volume = data['Volume'].resample('10D').sum()
+
+    plt.clf()
+
+    # fig = plt.figure(facecolor='#07000d')
     ax1 = plt.subplot2grid((1, 1), (0, 0))
-    # ax1 = plt.subplot2grid((6, 4), (1, 0), rowspan=6, colspan=4)
 
-    time_format = '%m-%d-%Y %H:%M:%S'
+    ax1.clear()
+    # ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 
-    data = data.iloc[90:]
+    time_format = '%m/%d/%Y %H:%M'
 
-    data['Date'] = data.index
-    data['Date'] = pd.to_datetime(data['Date'])
-    data['Date'] = data["Date"].apply(mdates.date2num)
+    data2 = data2.iloc[90:]
 
-    dates = data["Date"].tolist()
-    openp = data["Open"].tolist()
-    highp = data["High"].tolist()
-    lowp = data["Low"].tolist()
-    closep = data["Close"].tolist()
-    volume = data["Volume"].tolist()
 
-    x = 0
-    y = len(dates)
-    ohlc = []
+    # data['Date'] = data.index
+    # data['Date'] = pd.to_datetime(data['Date'])
+    # data['Date'] = data["Date"].apply(mdates.date2num)
+    #
+    # dates = data["Date"].tolist()
+    # openp = data["Open"].tolist()
+    # highp = data["High"].tolist()
+    # lowp = data["Low"].tolist()
+    # closep = data["Close"].tolist()
+    # volume = data["Volume"].tolist()
+    #
+    # x = 0
+    # y = len(dates)
+    # ohlc = []
+    #
+    # while x < y:
+    #     append_me = dates[x], openp[x], highp[x], lowp[x], closep[x], volume[x]
+    #     ohlc.append(append_me)
+    #     x += 1
+    #
+    # # candlestick_ohlc(ax1, ohlc)
+    #
+    # candlestick_ohlc(ax1, ohlc, width=.6/(24*60), colorup='#77d879', colordown='#db3f3f')
+    #
+    # for label in ax1.xaxis.get_ticklabels():
+    #     label.set_rotation(90)
 
-    while x < y:
-        append_me = dates[x], openp[x], highp[x], lowp[x], closep[x], volume[x]
-        ohlc.append(append_me)
-        x += 1
+    candlestick_ohlc(ax1, data2.values, width=.6 / (24 * 60), colorup='#77d879', colordown='#db3f3f')
 
-    # candlestick_ohlc(ax1, ohlc)
-
-    candlestick_ohlc(ax1, ohlc, width=.6/(24*60), colorup='#77d879', colordown='#db3f3f')
-
-    for label in ax1.xaxis.get_ticklabels():
-        label.set_rotation(90)
+    # width = .6 / (24 * 60)
 
     ax1.xaxis_date()
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter(time_format))
-    ax1.xaxis.set_major_locator(mticker.MaxNLocator(10))
-    # ax1.grid(True)
-    # plt.xticks(rotation=45)
+    # ax1.xaxis.set_major_formatter(mdates.DateFormatter(time_format))
+    # ax1.xaxis.set_major_locator(mticker.MaxNLocator(11))
+    # ax1.xaxis.set_major_locator(mticker.MaxNLocator(11))
+    # ax1.grid(True)  # , color='g', linestyle='-', linewidth=5)
+    plt.xticks(rotation=45)
 
-    plt.ylabel('Stock Price')
+    plt.ylabel('Stock Price', rotation=90)
     plt.xlabel('Date Hours:Minutes')
-    plt.title(stock)
+    plt.title(stock.upper())
     # plt.legend()
     # plt.subplots_adjust(left=0.09, bottom=0.20, right=0.94, top=0.90, wspace=0.2, hspace=0)
 
-    plt.savefig('mychart.png')
+    plt.subplots_adjust(left=0.09, bottom=0.20, right=0.94, top=0.90, wspace=0.2, hspace=0)
+
+
+    plt.savefig(my_path + '/static/mychart.png')
+    plt.close()
+
     # plt.show()
 
 
@@ -291,12 +336,107 @@ def PPSR(data):
     return data
 
 
+def load_sec_fillings(request):
+    company_name_url = ''
+    mydict = {}
+    if request.method == 'GET':
+        try:
+            stock = request.GET['tcker']
+
+            comp_prop = get_current_price(stock)
+
+            company = comp_prop['Company']
+
+            if (company.find(",") != -1 and company.find("Inc") != -1 and company.find(",") + 2 == company.find(
+                    "Inc")) or \
+                    company.find("Inc.") != -1:
+
+                new_string = re.sub("[ ,.]", " ", company)
+                company_name_url_list = new_string.split()
+
+                i = 0
+                for word in company_name_url_list:
+                    if word == 'Inc':
+                        company_name_url = company_name_url + '%2C+' + word
+                    else:
+                        if i == len(company_name_url_list) - 2:
+                            company_name_url = company_name_url + word
+                        else:
+                            company_name_url = company_name_url + word + '+'
+                    i += 1
+
+            sec_fillings = f"https://www.sec.gov/cgi-bin/browse-edgar?company=" + company_name_url + "&owner=exclude&action=getcompany"
+            soup = BeautifulSoup(requests.get(sec_fillings).text, "html.parser")
+
+            tab = soup.find("table", {"class": "tableFile2"})
+
+            if tab is None:
+                return HttpResponse(mydict, content_type='application/json')
+
+            table_rows = tab.find_all('tr')
+
+            res = []
+            j = 0
+            for tr in table_rows:
+                if j <= 3:
+                    td = tr.find_all('td')
+                    row = [tr.text.strip() for tr in td if tr.text.strip()]
+                    if row:
+                        res.append(row)
+
+                j += 1
+
+            df = pd.DataFrame(res, columns=['Filings', 'Format', 'Description', 'Filed', 'Number'])
+
+            json_response = df.to_json(orient='split')
+
+            return HttpResponse(json_response, content_type='application/json')
+
+        except Exception as e:
+            print(str(e), 'failed to organize pull SEC FILLINGS . - load_sec_fillings')
+            return HttpResponse(mydict, content_type='application/json')
+        except Exception as e:
+            print(str(e), 'failed to pull SEC FILLINGS - load_sec_fillings')
+            return HttpResponse(mydict, content_type='application/json')
+
+    return HttpResponse(mydict, content_type='application/json')
+
+
+def get_current_price(ticker):
+    stock_company = f"https://finance.yahoo.com/quote/" + ticker
+    soup = BeautifulSoup(requests.get(stock_company).text, "html.parser")
+    name = soup.h1.text.split('-')[1].strip()
+    price = soup.select_one('.Trsdu\(0\.3s\)').text
+    volume = soup.find("td", text="Volume").find_next_sibling("td").text
+
+    # load_sec_fillings(name)
+
+    my_ticker_dict = {'Company': name, 'Price': price, 'Volume': volume}
+
+    return my_ticker_dict
+
+
 def data_calculations(request):
     if request.method == 'GET':
 
         stock = request.GET['tcker']
 
         print('Currently Pulling', stock)
+
+        # soup = bs(res.content, 'lxml')
+        # price = soup.select_one('.Trsdu\(0\.3s\)').text
+
+        # stock_company = f"https://finance.yahoo.com/quote/" + stock
+        # soup = BeautifulSoup(requests.get(stock_company).text, "lxml")
+        # name = soup.h1.text.split('-')[1].strip()
+        # price = soup.select_one('.Trsdu\(0\.3s\)').text
+        # volume = soup.find("td", text="Volume").find_next_sibling("td").text
+
+
+
+        # ticker_data_url = f"https://query1.finance.yahoo.com/v8/finance/chart/"+stock+"?region=US&lang=en-US&includePrePost=false&interval=2m&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance"
+        # ticker_data = json.loads(requests.get(ticker_data_url).text)
+        # price = ticker_data['chart']['result'][0]['meta']['previousClose']
 
         # hiredate = '2018-10-28'
         # pattern = '%Y-%m-%d'
@@ -314,8 +454,8 @@ def data_calculations(request):
 
         try:
 
-            ts = TimeSeries(key='G3AXVEKKRY7RYJUD', output_format='pandas')
-            data, meta_data = ts.get_intraday(symbol=stock, interval='1min', outputsize='full')
+            # ts = TimeSeries(key='G3AXVEKKRY7RYJUD', output_format='pandas')
+            # data, meta_data = ts.get_intraday(symbol=stock, interval='1min', outputsize='full')
 
             cookie, crumb = get_cookie_crumb(stock)
 
@@ -335,21 +475,25 @@ def data_calculations(request):
 
             LL = PPSR(df)
 
-            data.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
-
-            data['vwap_pandas'] = (data.Volume * (data.High + data.Low) / 2).cumsum() / data.Volume.cumsum()
-
-            v = data.Volume.values
-            h = data.High.values
-            l = data.Low.values
-
-            data['vwap_numpy'] = np.cumsum(v * (h + l) / 2) / np.cumsum(v)
+            # data.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
+            #
+            # data['vwap_pandas'] = (data.Volume * (data.High + data.Low) / 2).cumsum() / data.Volume.cumsum()
+            #
+            # v = data.Volume.values
+            # h = data.High.values
+            # l = data.Low.values
+            #
+            # data['vwap_numpy'] = np.cumsum(v * (h + l) / 2) / np.cumsum(v)
 
             # data['vwap_numba'] = vwap()
 
-            MM = PPSR(data)
+            # MM = PPSR(data)
 
             dict = LL.to_dict('list')
+
+            my_curr_stock = get_current_price(stock)
+
+            dict['Price'] = my_curr_stock['Price']
 
             return JsonResponse(dict)
 
@@ -543,6 +687,10 @@ def home(request):
     # plt.show()
 
     df_finviz = load_finviz()
+
+    # for index, row in df_finviz.iterrows():
+    #     ticker_properties = get_current_price(row['Ticker'])
+    #     row['Price'] = ticker_properties['Price']
 
     json = df_finviz.to_json()
 
