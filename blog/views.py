@@ -2,36 +2,25 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Tickers
 import bs4 as bs
-import pickle
-import datetime as dt
-import numpy as np
 import pandas as pd
 import requests
-import json
 from django.http import JsonResponse
-from alpha_vantage.timeseries import TimeSeries
-import matplotlib.pyplot as plt
 import time
 import io
-import re
-from finviz.screener import Screener
 from alpha_vantage.timeseries import TimeSeries
-import matplotlib.ticker as mticker
 from mpl_finance import candlestick_ohlc
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from matplotlib.dates import date2num
 from datetime import datetime
 from pytz import timezone
 import itertools
-import warnings
 from matplotlib import style
 import os
 from bs4 import BeautifulSoup
 import re
-
-
+from json import loads
 from pandas.tseries.offsets import BDay
+import datetime as DT
 
 posts = [
     {
@@ -48,7 +37,6 @@ posts = [
         'date_posted': 'August 28, 2018'
     }
 
-
 ]
 
 my_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -60,7 +48,7 @@ def get_cookie_crumb(symbol):
     # Note: possible \u002F value
     # ,"CrumbStore":{"crumb":"FWP\u002F5EFll3U"
     # FWP\u002F5EFll3U
-    #crumb2 = crumb.decode('unicode-escape')
+    # crumb2 = crumb.decode('unicode-escape')
 
     return cookie, crumb
 
@@ -86,7 +74,7 @@ def get_page_data(symbol):
     url = "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol)
     r = requests.get(url)
     cookie = get_cookie_value(r)
-    #lines = r.text.encode('utf-8').strip().replace('}', '\n')
+    # lines = r.text.encode('utf-8').strip().replace('}', '\n')
     lines = r.content.decode('unicode-escape').strip().replace('}', '\n')
     return cookie, lines.split('\n')
 
@@ -96,7 +84,7 @@ def get_now_epoch():
     return int(time.time())
 
 
-def avg_true_range( df):
+def avg_true_range(df):
     ind = range(0, len(df))
     indexlist = list(ind)
     df.index = indexlist
@@ -135,7 +123,7 @@ def data_analysis(request):
             intval = time_frame + 'min'
 
             # get live price of Apple
-            #si.get_live_price(stock)
+            # si.get_live_price(stock)
 
             # yahoo = Share(stock)
             #
@@ -163,7 +151,9 @@ def data_analysis(request):
 
                 dict = LL.to_dict('list')
 
-                dict['Price'] = df["Close"].iloc[-1]
+                my_curr_stock = get_current_price(stock)
+
+                dict['Price'] = my_curr_stock['Price']
 
             else:
                 ts = TimeSeries(key='G3AXVEKKRY7RYJUD', output_format='pandas')
@@ -228,7 +218,6 @@ def graph_data(data, stock):
 
     data2 = data2.iloc[90:]
 
-
     # data['Date'] = data.index
     # data['Date'] = pd.to_datetime(data['Date'])
     # data['Date'] = data["Date"].apply(mdates.date2num)
@@ -275,7 +264,6 @@ def graph_data(data, stock):
 
     plt.subplots_adjust(left=0.09, bottom=0.20, right=0.94, top=0.90, wspace=0.2, hspace=0)
 
-
     plt.savefig(my_path + '/static/mychart.png')
     plt.close()
 
@@ -283,7 +271,6 @@ def graph_data(data, stock):
 
 
 def get_volume_intraday(request):
-
     if request.method == 'GET':
         try:
             stock = request.GET['tcker']
@@ -321,7 +308,6 @@ def get_volume_intraday(request):
 
 
 def PPSR(data):
-
     PP = pd.Series((data['High'] + data['Low'] + data['Close']) / 3)
     R1 = pd.Series(2 * PP - data['Low'])
     S1 = pd.Series(2 * PP - data['High'])
@@ -330,7 +316,7 @@ def PPSR(data):
     R3 = pd.Series(data['High'] + 2 * (PP - data['Low']))
     S3 = pd.Series(data['Low'] - 2 * (data['High'] - PP))
     VWAP = (data.Volume * (data.High + data.Low) / 2).cumsum() / data.Volume.cumsum()
-    psr = {'PP':PP, 'R1':R1, 'S1':S1, 'R2':R2, 'S2':S2, 'R3':R3, 'S3':S3, 'VWAP':VWAP}
+    psr = {'PP': PP, 'R1': R1, 'S1': S1, 'R2': R2, 'S2': S2, 'R3': R3, 'S3': S3, 'VWAP': VWAP}
     PSR = pd.DataFrame(psr)
     data = data.join(PSR)
     return data
@@ -338,6 +324,7 @@ def PPSR(data):
 
 def load_sec_fillings(request):
     company_name_url = ''
+    name_noinc = ''
     mydict = {}
     if request.method == 'GET':
         try:
@@ -357,8 +344,22 @@ def load_sec_fillings(request):
                 i = 0
                 for word in company_name_url_list:
                     if word == 'Inc':
+                        name_noinc = company_name_url
                         company_name_url = company_name_url + '%2C+' + word
                     else:
+                        if i == len(company_name_url_list) - 2:
+                            company_name_url = company_name_url + word
+                        else:
+                            company_name_url = company_name_url + word + '+'
+                    i += 1
+
+            if company.find("Corporation") != -1 or company.find("Corp.") != -1:
+                new_string = re.sub("[ ,.]", " ", company)
+                company_name_url_list = new_string.split()
+
+                i = 0
+                for word in company_name_url_list:
+                    if word != 'Corporation' and word != 'Corp':
                         if i == len(company_name_url_list) - 2:
                             company_name_url = company_name_url + word
                         else:
@@ -371,7 +372,13 @@ def load_sec_fillings(request):
             tab = soup.find("table", {"class": "tableFile2"})
 
             if tab is None:
-                return HttpResponse(mydict, content_type='application/json')
+                sec_fillings = f"https://www.sec.gov/cgi-bin/browse-edgar?company=" + name_noinc + "&owner=exclude&action=getcompany"
+                soup = BeautifulSoup(requests.get(sec_fillings).text, "html.parser")
+
+                tab = soup.find("table", {"class": "tableFile2"})
+
+                if tab is None:
+                    return HttpResponse(mydict, content_type='application/json')
 
             table_rows = tab.find_all('tr')
 
@@ -402,6 +409,13 @@ def load_sec_fillings(request):
     return HttpResponse(mydict, content_type='application/json')
 
 
+def get_change_percentage(numvaluestart, numvaluecurrent):
+    floatpricestart = float(numvaluestart)
+    floatpricecurrent = float(numvaluecurrent)
+
+    return round(((floatpricecurrent - floatpricestart) / floatpricestart) * 100, 2)
+
+
 def get_current_price(ticker):
     stock_company = f"https://finance.yahoo.com/quote/" + ticker
     soup = BeautifulSoup(requests.get(stock_company).text, "html.parser")
@@ -409,9 +423,70 @@ def get_current_price(ticker):
     price = soup.select_one('.Trsdu\(0\.3s\)').text
     volume = soup.find("td", text="Volume").find_next_sibling("td").text
 
-    # load_sec_fillings(name)
+    script = soup.find("script", text=re.compile("root.App.main")).text
+    data = loads(re.search("root.App.main\s+=\s+(\{.*\})", script).group(1))
+    stores = data["context"]["dispatcher"]["stores"]
 
-    my_ticker_dict = {'Company': name, 'Price': price, 'Volume': volume}
+    stock_properties = stores[u'QuoteSummaryStore']
+
+    try:
+        premarketprice = 0.00
+        regularmarketprice = stock_properties['price']['regularMarketPrice']['fmt']
+        postmarketprice = stock_properties['price']['postMarketPrice']['fmt']
+        regularmarkethigh = stock_properties['summaryDetail']['regularMarketDayHigh']['fmt']
+        previous_close = stock_properties['summaryDetail']['regularMarketPreviousClose']['fmt']
+
+        fiftytwoweekhigh = stock_properties['summaryDetail']['fiftyTwoWeekHigh']['fmt']
+        regularMarketOpen = stock_properties['summaryDetail']['regularMarketOpen']['fmt']
+        regularMarketVolume = stock_properties['summaryDetail']['regularMarketVolume']['fmt']
+
+        float_volume = float(regularMarketVolume[:-1])
+
+        est = timezone('US/Eastern')
+
+        current_time = datetime.now(est).time()
+
+        test_time = DT.datetime.now()
+
+        today830am = test_time.replace(hour=8, minute=30, second=0, microsecond=0).time()
+        today929am = test_time.replace(hour=9, minute=29, second=0, microsecond=0).time()
+        today930am = test_time.replace(hour=9, minute=30, second=0, microsecond=0).time()
+        today400pm = test_time.replace(hour=16, minute=0, second=0, microsecond=0).time()
+
+        if current_time >= today830am and current_time < today929am:
+            premarketprice = stock_properties['price']['preMarketPrice']['fmt']
+            price = premarketprice
+        elif current_time >= today930am and current_time <= today400pm:
+            price = regularmarketprice
+        else:
+            price = postmarketprice
+
+        stock_strong = 'N'
+
+        if float_volume > 1.99 and regularMarketVolume[-1] == 'M':
+            if regularMarketOpen > previous_close:
+                percentage_change_open = get_change_percentage(previous_close, regularMarketOpen)
+
+                if percentage_change_open >= 3.00:
+                    percentage_change_current = get_change_percentage(regularMarketOpen, price)
+
+                    if percentage_change_current >= 10.00:
+                        if regularmarkethigh > price:
+                            percentage_change_high = get_change_percentage(price, regularmarkethigh)
+
+                            if 0.00 <= percentage_change_high <= 1.50:
+                                stock_strong = 'Y'
+
+    except Exception as e:
+        postmarketprice = price
+        premarketprice = price
+        regularmarketprice = price
+        regularmarkethigh = 0.00
+        previous_close = 0.00
+
+    my_ticker_dict = {'Company': name, 'Price': price, 'Volume': volume, 'RegularMarketPrice': regularmarketprice,
+                      'PostMarketPrice': postmarketprice, 'PreMarketPrice': premarketprice,
+                      'MarketHigh': regularmarkethigh, 'Previous_Close': previous_close, 'stock_strong': stock_strong}
 
     return my_ticker_dict
 
@@ -431,8 +506,6 @@ def data_calculations(request):
         # name = soup.h1.text.split('-')[1].strip()
         # price = soup.select_one('.Trsdu\(0\.3s\)').text
         # volume = soup.find("td", text="Volume").find_next_sibling("td").text
-
-
 
         # ticker_data_url = f"https://query1.finance.yahoo.com/v8/finance/chart/"+stock+"?region=US&lang=en-US&includePrePost=false&interval=2m&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance"
         # ticker_data = json.loads(requests.get(ticker_data_url).text)
@@ -460,7 +533,7 @@ def data_calculations(request):
             cookie, crumb = get_cookie_crumb(stock)
 
             url = "https://query1.finance.yahoo.com/v7/finance/download/%s?period1=%s&period2=%s&interval=1d&events=history&crumb=%s" % (
-            stock, start_date, end_date, crumb)
+                stock, start_date, end_date, crumb)
             response = requests.get(url, cookies=cookie)
             stockFile = []
 
@@ -470,6 +543,11 @@ def data_calculations(request):
             df = pd.read_csv(io.StringIO(urlData.decode('utf-8')))
 
             df.set_index('Date', inplace=True)
+
+            avg_true_range(df)
+
+            df["AvgTR"].fillna(0, inplace=True)
+            df["TrueRange"].fillna(0, inplace=True)
 
             # compute and print the data
 
@@ -521,7 +599,7 @@ def data_calculations2(stock):
         cookie, crumb = get_cookie_crumb(stock)
 
         url = "https://query1.finance.yahoo.com/v7/finance/download/%s?period1=%s&period2=%s&interval=1d&events=history&crumb=%s" % (
-        stock, start_date, end_date, crumb)
+            stock, start_date, end_date, crumb)
         response = requests.get(url, cookies=cookie)
         stockFile = []
 
@@ -570,7 +648,10 @@ def load_finviz():
         # resp = requests.get('https://finviz.com/')  # soup = bs.BeautifulSoup(resp.text, 'lxml')
         # resp = requests.get('https://finviz.com/screener.ashx?v=152&s=ta_topgainers&f=sh_price_u5&c=1,25,30,49,59,63,65,67')
 
-        resp = requests.get('https://finviz.com/screener.ashx?v=152&s=ta_topgainers&f=sh_price_u5,sh_curvol_o200&c=1,25,30,49,59,63,65,67')
+        resp = requests.get(
+            'https://finviz.com/screener.ashx?v=152&s=ta_topgainers&f=sh_price_u7,sh_curvol_o200&o=sharesfloat&c=1,25,30,49,59,63,65,67')  # D.R. Modified Screener URL 04/03/2019
+
+        # resp = requests.get('https://finviz.com/screener.ashx?v=152&s=ta_topgainers&f=sh_price_u5,sh_curvol_o200&c=1,25,30,49,59,63,65,67')
 
         soup = bs.BeautifulSoup(resp.text, 'html.parser')
         # table = soup.find('table', {'class':'t-home-table'})
@@ -616,7 +697,8 @@ def load_tickers(request):
 
         # resp = requests.get('https://finviz.com/')  # soup = bs.BeautifulSoup(resp.text, 'lxml')
         # resp = requests.get('https://finviz.com/screener.ashx?v=152&s=ta_topgainers&f=sh_price_u5&c=1,25,30,59,63,67,65')  # soup = bs.BeautifulSoup(resp.text, 'lxml')
-        resp = requests.get('https://finviz.com/screener.ashx?v=152&s=ta_topgainers&f=sh_price_u5,sh_curvol_o200&c=1,25,30,59,63,67,65')
+        resp = requests.get(
+            'https://finviz.com/screener.ashx?v=152&s=ta_topgainers&f=sh_price_u5,sh_curvol_o200&c=1,25,30,59,63,67,65')
         soup = bs.BeautifulSoup(resp.text, 'html.parser')
         table = soup.find('table', {'class': 't-home-table'})
         table_rows = table.find_all('tr')
@@ -642,25 +724,14 @@ def load_tickers(request):
 
 
 def custom_screener(request):
-
     url_screener = request.GET['url']
 
     print('Currently Pulling', url_screener)
 
-    # resp = requests.get('https://finviz.com/')  # soup = bs.BeautifulSoup(resp.text, 'lxml')  html.parser
-    resp = requests.get('https://finviz.com/screener.ashx?' + url_screener)
-    soup = bs.BeautifulSoup(resp.text, 'lxml')
-
-    columns = []
-    for td in soup.find_all("td", class_="table-top"):
-        columns.append(td.text.strip())
-
-    columns.insert(1, soup.find("td", class_="table-top-s").text.strip())
-
-
-    # table_other = soup.find(text="Float").find_parent("table")
-
-    table_rows = soup.find_all('tr', class_="table-dark-row-cp")
+    resp = requests.get(url_screener)
+    soup = bs.BeautifulSoup(resp.text, 'html.parser')
+    table_other = soup.find(text="Float").find_parent("table")
+    table_rows = table_other.find_all('tr')
 
     res = []
     for tr in table_rows:
@@ -669,14 +740,12 @@ def custom_screener(request):
         if row:
             res.append(row)
 
-    # res.pop(0)
-    df = pd.DataFrame(res, columns=columns)
+    res.pop(0)
+    df = pd.DataFrame(res, columns=['Ticker', 'Float', 'FloatShort', 'ATR', 'RSI', 'AvgVolume', 'Price', 'Volume'])
 
-    df.columns = df.columns.str.strip().str.replace(' ', '').str.replace('(', '').str.replace(')', '').str.replace('/', '')
+    json_response = df.to_json(orient='split')
 
-    dict = df.to_dict(orient='list')
-
-    return JsonResponse(dict, safe=False)
+    return HttpResponse(json_response, content_type='application/json')
 
 
 def home(request):
@@ -702,7 +771,7 @@ def home(request):
 
     df_finviz[["Price"]] = df_finviz[["Price"]].apply(pd.to_numeric)
 
-    df_finviz.sort_values(by=['Price'], inplace=True, ascending=True)
+    # df_finviz.sort_values(by=['Price'], inplace=True, ascending=True)
 
     dict = df_finviz.to_dict(orient='records')
 
@@ -716,6 +785,4 @@ def home(request):
 
 
 def about(request):
-    return render(request, 'blog/about.html', {'title':'About'})
-
-
+    return render(request, 'blog/about.html', {'title': 'About'})
