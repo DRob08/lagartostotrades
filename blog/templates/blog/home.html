@@ -4,12 +4,15 @@
 
 <head>
     <style>
-        tr:hover {
-            background-color: #ffff99!important;
-        }
 
-        h2 {
-  text-align: center;
+
+
+tr:hover {
+    background-color: #ffff99!important;
+}
+
+h2 {
+    text-align: center;
 }
 
 table caption {
@@ -283,10 +286,6 @@ Custom media queries
   cursor: pointer;
 }
 
-.anyClass {
-  height:200px;
-  overflow-y: scroll;
-}
 
 .fixed_header{
 
@@ -325,6 +324,78 @@ Custom media queries
 .fixed_header thead tr:hover {
    background-color: #5f788a!important;
 }
+
+
+
+.fixed_header_sec{
+
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.fixed_header_sec tbody{
+  display:block;
+  width: 100%;
+  overflow: auto;
+  height: 200px;
+  overflow-y: scroll;
+}
+
+.fixed_header_sec thead tr {
+   display: block;
+}
+
+.fixed_header_sec thead {
+  background: #f5694b!important;
+  color:#fff;
+}
+
+.fixed_header_sec th, .fixed_header_sec td {
+  padding: 2px;
+  text-align: center;
+  width: 300px;
+  border-color: #f5694b!important;
+}
+
+.fixed_header_sec tr:hover {
+  background-color: #f5694b!important;
+}
+
+.fixed_header_sec thead tr:hover {
+   background-color: #f5694b!important;
+}
+
+.modal-open, body {overflow: inherit !important;}
+
+
+
+
+
+
+
+
+.btns {width: 100% !important;}
+
+.dropdown-menu {
+
+    width: -moz-available;
+    text-align: center;
+}
+
+
+#loading {
+		-webkit-animation: rotation 2s infinite linear;
+}
+
+@-webkit-keyframes rotation {
+		from {
+				-webkit-transform: rotate(0deg);
+		}
+		to {
+				-webkit-transform: rotate(359deg);
+		}
+}
+
 
 
 
@@ -404,10 +475,76 @@ Custom media queries
                             </div>
                     </div>&lt;!&ndash; e row &ndash;&gt;-->
 
+
+                <div class="card card-outline-secondary">
+                    <div class="card-body">
+                        <div class="row mt-4">
+                            <div class="col-sm-4 pb-3">
+                                <div class="dropdown text-center">
+                                    <button class="btn btn-info dropdown-toggle btns" type="button"
+                                            id="dropdownMenuPerf" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        Performance
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuPerf" id="dropperformance">
+                                        <a class="dropdown-item" href="#" value="ta_perf_dup">Today Up</a>
+                                        <a class="dropdown-item" href="#" value="ta_perf_ddown">Today Down</a>
+                                        <a class="dropdown-item" href="#" value="ta_perf_d5o">Today +5%</a>
+                                        <a class="dropdown-item" href="#" value="ta_perf_d10o">Today +10%</a>
+                                        <a class="dropdown-item" href="#" value="ta_perf_d15o">Today +15%</a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="col-sm-4 pb-3">
+                                <div class="dropdown text-center">
+                                    <button class="btn btn-info dropdown-toggle btns" type="button"
+                                            id="dropdownVol" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        Volume
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownVol">
+                                        <a class="dropdown-item" href="#" value="sh_curvol_o500">Over 500K</a>
+                                        <a class="dropdown-item" href="#" value="sh_curvol_o1000">Over 1M</a>
+                                        <a class="dropdown-item" href="#" value="sh_curvol_o5000">Over 5M</a>
+                                        <a class="dropdown-item" href="#" value="sh_curvol_o10000">Over 10M</a>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-4 pb-3">
+                                <div class="dropdown text-center">
+                                    <button class="btn btn-info dropdown-toggle btns" type="button"
+                                            id="dropdownPrice" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        Price
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownPrice">
+                                        <a class="dropdown-item" href="#" value="sh_price_u7">Under 7</a>
+                                        <a class="dropdown-item" href="#" value="sh_price_u10">Under 10</a>
+                                        <a class="dropdown-item" href="#" value="sh_price_u15">Under 15</a>
+                                        <a class="dropdown-item" href="#" value="sh_price_u20">Under 20</a>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div><!--/card-->
+
                 <div class="table-responsive mt-2">
                     <table id="tickertbl" class="table table-hover">
                         <thead class="thead-dark">
                         <tr>
+                            <!--<th scope="col" class="text-center"></th>
                             <th scope="col" class="text-center">Ticker</th>
                             <th scope="col" class="text-center">Float</th>
                             <th scope="col" class="text-center">Float Short</th>
@@ -415,7 +552,19 @@ Custom media queries
                             <th scope="col" class="text-center">RSI</th>
                             <th scope="col" class="text-center">Avg Volume</th>
                             <th scope="col" class="text-center">Price</th>
+                            <th scope="col" class="text-center">Volume</th>-->
+
+                            <th scope="col" class="text-center"></th>
+                            <th scope="col" class="text-center">Ticker</th>
+                            <th scope="col" class="text-center">Float</th>
                             <th scope="col" class="text-center">Volume</th>
+                            <th scope="col" class="text-center">Price</th>
+                            <th scope="col" class="text-center">Avg Volume</th>
+                            <th scope="col" class="text-center">Float Short</th>
+                            <th scope="col" class="text-center">ATR</th>
+                            <th scope="col" class="text-center">RSI</th>
+
+
                         </tr>
                         </thead>
                         <tbody>
@@ -423,22 +572,38 @@ Custom media queries
                         {% for key in symbols %}
                         <tr>
                             <!--<th scope="row">3</th>-->
+                            <td class="text-center"><a href="http://stockcharts.com/h-sc/ui?s={{ key.Ticker }}"
+                                                       class="btn btn-info"><i id="test"
+                                                                               class="fa fa-bar-chart"> </i></a></td>
                             <td class="text-center"><a id="tkrs" href="#myModal" class="btn btn-primary"
                                                        data-toggle="modal">{{ key.Ticker }}</a></td>
 
 
-                            {% if key.Float|slice:":-1" < 21.00 %}
-                            <td class="text-center" bgcolor="#92a8d1">{{ key.Float }}M</td>
+                            <!--  {% if key.Float|slice:":-1" < 21.00 %}
+                              <td class="text-center" bgcolor="#92a8d1">{{ key.Float }}M</td>
+                              {% else %}
+                              <td class="text-center">{{ key.Float}}M</td>
+                              {% endif %}
+
+
+                              <td class="text-center">{{ key.FloatShort }}</td>
+                              <td class="text-center">{{ key.ATR }}</td>
+                              <td class="text-center">{{ key.RSI }}</td>
+                              <td class="text-center">{{ key.AvgVolume }}</td>
+                              <td id="currentprice" class="text-center">{{ key.Price }}</td>-->
+
+
+                            {% if key.Float|slice:":-1" < 8.00 %}
+                            <td class="text-center" bgcolor="#F6A205">{{ key.Float }}M</td>
                             {% else %}
                             <td class="text-center">{{ key.Float}}M</td>
                             {% endif %}
-
-
+                            <td class="text-center">{{ key.Volume }}</td>
+                            <td id="currentprice" class="text-center">{{ key.Price }}</td>
+                            <td class="text-center">{{ key.AvgVolume }}</td>
                             <td class="text-center">{{ key.FloatShort }}</td>
                             <td class="text-center">{{ key.ATR }}</td>
                             <td class="text-center">{{ key.RSI }}</td>
-                            <td class="text-center">{{ key.AvgVolume }}</td>
-                            <td id="currentprice" class="text-center">{{ key.Price }}</td>
 
                             <!--{% if  key.Price > 2 %}
                                 <td id="currentprice" class="text-center" bgcolor="#00FF00">{{ key.Price }}</td>
@@ -447,7 +612,7 @@ Custom media queries
                             {% endif %}-->
 
 
-                            <td class="text-center">{{ key.Volume }}</td>
+                            <!--<td class="text-center">{{ key.Volume }}</td>-->
 
 
                         </tr>
@@ -561,9 +726,14 @@ Custom media queries
         </div>
 
         <div class="row mt-4">
-            <div class="col-sm-12 pb-3">
+            <div class="col-sm-6 pb-3 text-center">
+                <img id="loading" class="img-fluid mx-auto" src="">
+            </div>
+            <div class="col-sm-6 pb-3">
                 <div class="float-right">
                     <input id="clear" class="btn btn-secondary btn-lg" type="reset" value="Clear">
+
+
                     <!--<input id="analyze" class="btn btn-primary btn-lg " type="button" value="Analyze" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing Order">-->
                     <button id="analyze" type="submit" class="btn btn-primary btn-lg">Analyze</button>
                 </div>
@@ -629,6 +799,37 @@ Custom media queries
         </div>
 
         <div class="row mt-4">
+            <div class="col-sm-3 pb-3">
+                <label for="spp" class="control-label">Pivot Point</label>
+                <input class="decimal form-control" id="spp" placeholder="" type="text">
+            </div>
+            <div class="col-sm-3 pb-3">
+                <label for="satr" class="control-label">ATR</label>
+                <input class="decimal form-control" id="satr" type="text">
+
+            </div>
+
+            <div class="col-sm-3 pb-3">
+                 <div class="btn-group text-center mt-4">
+                    <a id="btnsec" class="btn btn-outline-primary btn-lg" href="#" data-target="#modalSEC" data-toggle="modal">
+                        <i class="fa fa-file-text"></i>
+                    </a>
+
+                     <a id="btnyahoo" class="btn btn-outline-primary btn-lg">
+                        <i class="fa fa-yahoo"></i>
+                    </a>
+
+                     <a id="btnstckschrts" class="btn btn-outline-primary btn-lg">
+                        <i class="fa fa-line-chart"></i>
+                    </a>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row mt-4">
             <div class="col-sm-6 pb-3">
 
                 <h4 class="text-primary text-center mb-0">Intra Day 1 Min Volume</h4>
@@ -647,70 +848,62 @@ Custom media queries
                         </tbody>
                     </table>
 
+
                     <button id="btnchart" class="btn btn-primary" data-target="#modalIMG" data-toggle="modal" href="#">
-                        <i class="fa fa-bar-chart"> </i>Candlestick Chart
+                        <i class="fa fa-bar-chart"> </i> Candlestick Chart
                     </button>
                 </div>
 
                 <!-- BELOW IS THE NEW TABLE FOR SEC FILLINGS -->
 
-                <h4 class="text-primary text-center mt-4">SEC Fillings</h4>
+                <!-- <h4 class="text-primary text-center mt-4">SEC Fillings</h4>
 
-                <div class="table-responsive-sm mt-2 text-center">
-                    <table id="sectbl" class="fixed_header table table-striped table-dark table-sm">
-                        <thead>
-                        <tr>
-                            <th scope="col" class="text-center">Filings</th>
-                            <th scope="col" class="text-center">Description</th>
-                            <th scope="col" class="text-center">Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                 <div class="table-responsive-sm mt-2 text-center">
+                     <table id="sectbl" class="fixed_header table table-striped table-dark table-sm">
+                         <thead>
+                         <tr>
+                             <th scope="col" class="text-center">Filings</th>
+                             <th scope="col" class="text-center">Description</th>
+                             <th scope="col" class="text-center">Date</th>
+                         </tr>
+                         </thead>
+                         <tbody>
 
-                        </tbody>
-                    </table>
-                </div>
+                         </tbody>
+                     </table>
+                 </div>-->
 
-
-            </div>
-
-            <div class="col-sm-3 pb-3">
-                <label for="spp" class="control-label">Pivot Point</label>
-                <input class="decimal form-control" id="spp" placeholder="" type="text">
-            </div>
-            <div class="col-sm-3 pb-3">
-                <label for="satr" class="control-label">ATR</label>
-                <input class="decimal form-control" id="satr" type="text">
 
             </div>
+
+
         </div>
 
 
-       <!-- <div class="row mt-2">
-             <div class="col-sm-6 pb-3">
+        <!-- <div class="row mt-2">
+              <div class="col-sm-6 pb-3">
 
+              </div>
+              <div class="col-sm-6 pb-3">
+
+                 <h4 class="text-primary text-center mb-0">SEC Fillings</h4>
+
+                 <div class="table-responsive-sm mt-2 text-center">
+                     <table id="sectbl" class="fixed_header table table-striped table-dark table-sm">
+                         <thead>
+                         <tr>
+                             <th scope="col" class="text-center">Filings</th>
+                             <th scope="col" class="text-center">Description</th>
+                             <th scope="col" class="text-center">Date</th>
+                         </tr>
+                         </thead>
+                         <tbody>
+
+                         </tbody>
+                     </table>
+                 </div>
              </div>
-             <div class="col-sm-6 pb-3">
-
-                <h4 class="text-primary text-center mb-0">SEC Fillings</h4>
-
-                <div class="table-responsive-sm mt-2 text-center">
-                    <table id="sectbl" class="fixed_header table table-striped table-dark table-sm">
-                        <thead>
-                        <tr>
-                            <th scope="col" class="text-center">Filings</th>
-                            <th scope="col" class="text-center">Description</th>
-                            <th scope="col" class="text-center">Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>-->
-
+         </div>-->
 
 
     </div>
@@ -963,6 +1156,40 @@ Custom media queries
 </div>
 
 
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="modalSEC" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title text-primary text-center ">SEC Fillings</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="modal-body mb-0 p-0 text-center">
+                <div class="table-responsive-sm text-center">
+                    <table id="sectblfile" class="fixed_header_sec table table-striped table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Filings</th>
+                            <th scope="col" class="text-center">Description</th>
+                            <th scope="col" class="text-center">Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-primary btn-rounded btn-md ml-4 text-center" data-dismiss="modal"
+                        type="button">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     <!--$(document).ready(function(){-->
 
@@ -977,9 +1204,9 @@ Custom media queries
 
     <!--});-->
 
-     $('#tickertbl tr').click(function() {
-         <!--var ticker = $(this).find("td:first").html();-->
-         var test = $(this).find("#tkrs").html()
+
+$( "#tickertbl tbody" ).on( "click", "tr", function() {
+   var test = $(this).find("#tkrs").html()
 
          var ticker = $(this).find("#tkrs").html()
          var price = $(this).find("td").eq(6).html();
@@ -1018,6 +1245,7 @@ Custom media queries
 
                  //var down = price - data.S1[4].toFixed(2)
                 price = parseFloat(data.Price).toFixed(2)
+                atr = data.AvgTR[data.AvgTR.length - 1].toFixed(4)
                 var down = price - data.S1[data.S1.length - 1].toFixed(2)
                 var up = data.R1[data.R1.length - 1].toFixed(2) - price
 
@@ -1070,10 +1298,9 @@ Custom media queries
            })
            .done(function() { console.log('getJSON request succeeded!'); })
            .fail(function(jqXHR, textStatus, errorThrown) { console.log('getJSON request failed! ' + textStatus); });
+});
 
 
-
-    });
 
 
  function isEmpty(obj) {
@@ -1250,8 +1477,12 @@ $('#clear').click(function() {
                  {
                       this.checked = false;
                  });
+                 $("#loading").attr("src", "");
 
      });
+
+
+
 
  $('#analyze').click(function() {
 
@@ -1354,7 +1585,7 @@ $('#clear').click(function() {
 
 
                 $("#svwap").val(data.VWAP[data.VWAP.length - 1].toFixed(2));
-                $("#sprice").val(data.Close[data.Close.length - 1].toFixed(2));
+                $("#sprice").val(price);
                 $("#ss1").val(data.S1[data.S1.length - 1].toFixed(2));
                 $("#ss2").val(data.S2[data.S2.length - 1].toFixed(2));
                 $("#ss3").val(data.S3[data.S3.length - 1].toFixed(2));
@@ -1370,6 +1601,12 @@ $('#clear').click(function() {
                  $("#sstop").val(stoploss.toFixed(2));
                  $this.html($this.data('original-text'));
 
+                 if (data.stock_strong == 'Y'){
+                    $("#loading").attr("src", "/static/loading_small_sm.png");
+                 }
+
+
+
 
             })
             .done(function() { console.log('getJSON request succeeded!');
@@ -1379,7 +1616,7 @@ $('#clear').click(function() {
 
             displayVolume(ticker);
 
-            displaySECFillings(ticker);
+            //displaySECFillings(ticker);
 
          }else {
                 alert("Enter Ticker and select Time frame" );
@@ -1453,6 +1690,38 @@ slider.oninput = function() {
 }
 
 
+ $('#btnsec').click(function() {
+
+    $("#mdlhdr").text("SEC FILLINGS" );
+    var ticker = $('#myticker').val().toUpperCase();
+    $("#sectblfile tbody tr").remove();
+    if(ticker)
+    {   $("#mdlhdr").text("SEC FILLINGS - " + ticker);
+        displaySECFillings(ticker);
+    }
+
+ });
+
+  $('#btnyahoo').click(function() {
+
+    var ticker = $('#myticker').val().toUpperCase();
+    if(ticker)
+    {
+        window.open('https://finance.yahoo.com/quote/'+ticker, '_blank');
+    }
+
+ });
+
+ $('#btnstckschrts').click(function() {
+
+    var ticker = $('#myticker').val().toUpperCase();
+    if(ticker)
+    {
+        window.open('https://stockcharts.com/h-sc/ui?s='+ticker, '_blank');
+    }
+
+ });
+
 function displaySECFillings(myticker) {
 
             $.getJSON('{% url "load_sec_fillings" %}',{
@@ -1464,13 +1733,8 @@ function displaySECFillings(myticker) {
 
 
                 for (var i = 0; i < data.data.length; i++ ) {
-                    $("#sectbl tbody").append('<tr><td class="text-center">'+ data.data[i][0] + '</td> <td class="text-center">' + data.data[i][2] + ' </td> ' + '</td> <td class="text-center">' + data.data[i][3] + ' </td></tr>');
+                    $("#sectblfile tbody").append('<tr><td class="text-center">'+ data.data[i][0] + '</td> <td class="text-center">' + data.data[i][2] + ' </td> ' + '</td> <td class="text-center">' + data.data[i][3] + ' </td></tr>');
                 }
-
-
-
-
-
 
             })
             .done(function() {
@@ -1481,6 +1745,103 @@ function displaySECFillings(myticker) {
             				 });
 
 }
+
+
+$('.dropdown-toggle').dropdown()
+
+$('.navbar-toggler').dropdown()
+
+$(".dropdown-menu a ").click(function(){
+        $(this).parents(".dropdown").find('.btn').text($(this).text());
+
+
+        $(this).parents(".dropdown").find('.btn').attr('value', $(this).attr('value'));
+
+
+       var btnperformanceval =  $('#dropdownMenuPerf').attr('value');
+       var btnvolumeval =  $('#dropdownVol').attr('value');
+       var btnpriceval =  $('#dropdownPrice').attr('value');
+       var query_url;
+
+        if (typeof btnperformanceval !== "undefined") {
+            //alert('https://finviz.com/screener.ashx?v=151&f=');
+            query_url = btnperformanceval;
+        }
+
+        if (typeof btnvolumeval !== "undefined") {
+            //alert('https://finviz.com/screener.ashx?v=151&f=');
+
+            if (typeof btnperformanceval === "undefined"){
+                query_url = btnvolumeval;
+            }
+            else{
+                query_url = query_url + ',' + btnvolumeval;
+            }
+        }
+
+         if (typeof btnpriceval !== "undefined") {
+            //alert('https://finviz.com/screener.ashx?v=151&f=');
+            if (typeof query_url === "undefined"){
+                query_url = btnpriceval;
+            }
+            else{
+                query_url = query_url + ',' + btnpriceval;
+            }
+        }
+
+       var finviz_url = 'https://finviz.com/screener.ashx?v=151&f=' + query_url + '&c=1,25,30,49,59,63,65,67';
+
+       var bgcolor = '';
+
+
+        $.getJSON('{% url "custom_screener" %}',{
+              url : finviz_url
+
+         },
+            function(data) {
+                console.log(data.columns[0]);
+                if (!isEmpty(data)){
+                  $("#tickertbl tbody tr").detach();
+                    for (var i = 0; i < data.data.length; i++ ) {
+
+                        var float = data.data[i][1].slice(0,-1);
+
+                        if (float < 8.00 && data.data[i][1].substr(-1) === 'M' ){
+                           $("#tickertbl tbody").append('<tr><td class="text-center"><a href="http://stockcharts.com/h-sc/ui?s=' + data.data[i][0] + ' " class="btn btn-info"> <i id="test" class="fa fa-bar-chart"> </i></a></td><td class="text-center"> <a id="tkrs" href="#myModal" class="btn btn-primary" data-toggle="modal">'+ data.data[i][0] + '</a></td> <td class="text-center" bgcolor="#F6A205" >' + data.data[i][1] + ' </td> ' + '</td> <td class="text-center">' + data.data[i][7] + ' </td><td class="text-center">' + data.data[i][6] + ' </td> <td class="text-center">' + data.data[i][5] + ' </td><td class="text-center">' + data.data[i][2] + ' </td> <td class="text-center">' + data.data[i][3] + ' </td><td class="text-center">' + data.data[i][4] + ' </td></tr>');
+                        }
+                        else{
+                           $("#tickertbl tbody").append('<tr><td class="text-center"><a href="http://stockcharts.com/h-sc/ui?s=' + data.data[i][0] + ' " class="btn btn-info"> <i id="test" class="fa fa-bar-chart"> </i></a></td><td class="text-center"> <a id="tkrs" href="#myModal" class="btn btn-primary" data-toggle="modal">'+ data.data[i][0] + '</a></td> <td class="text-center" >' + data.data[i][1] + ' </td> ' + '</td> <td class="text-center">' + data.data[i][7] + ' </td><td class="text-center">' + data.data[i][6] + ' </td> <td class="text-center">' + data.data[i][5] + ' </td><td class="text-center">' + data.data[i][2] + ' </td> <td class="text-center">' + data.data[i][3] + ' </td><td class="text-center">' + data.data[i][4] + ' </td></tr>');
+                        }
+                    }
+
+                }
+
+
+
+
+            })
+            .done(function() {
+            					console.log('getJSON request Custom Screener succeeded!');
+            				 })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+            					console.log('getJSON request failed Custom Screener ! ' + textStatus);
+            				 });
+
+
+ });
+
+
+
+
+
+
+
+/*$('#dropperformance').click(function() {
+
+   alert($(this).attr('value'));
+
+ });*/
+
 
 
 
