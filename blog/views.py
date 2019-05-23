@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Tickers
+from .models import Ticker
 import bs4 as bs
 import pandas as pd
 import requests
@@ -21,6 +21,8 @@ import re
 from json import loads
 from pandas.tseries.offsets import BDay
 import datetime as DT
+from .models import TickerLogger
+
 
 posts = [
     {
@@ -155,6 +157,8 @@ def data_analysis(request):
 
                 dict['Price'] = my_curr_stock['Price']
 
+                dict['stock_strong'] = my_curr_stock['stock_strong']
+
             else:
                 ts = TimeSeries(key='G3AXVEKKRY7RYJUD', output_format='pandas')
                 data, meta_data = ts.get_intraday(symbol=stock, interval=intval, outputsize='compact')
@@ -175,6 +179,8 @@ def data_analysis(request):
                 my_curr_stock = get_current_price(stock)
 
                 dict['Price'] = my_curr_stock['Price']
+
+                dict['stock_strong'] = my_curr_stock['stock_strong']
 
             return JsonResponse(dict)
 
@@ -448,18 +454,26 @@ def get_current_price(ticker):
 
         test_time = DT.datetime.now()
 
-        today830am = test_time.replace(hour=8, minute=30, second=0, microsecond=0).time()
+        today800am = test_time.replace(hour=8, minute=00, second=0, microsecond=0).time()
         today929am = test_time.replace(hour=9, minute=29, second=0, microsecond=0).time()
         today930am = test_time.replace(hour=9, minute=30, second=0, microsecond=0).time()
         today400pm = test_time.replace(hour=16, minute=0, second=0, microsecond=0).time()
 
-        if current_time >= today830am and current_time < today929am:
+        if today800am == current_time <= today929am:
             premarketprice = stock_properties['price']['preMarketPrice']['fmt']
             price = premarketprice
-        elif current_time >= today930am and current_time <= today400pm:
+        elif today930am == current_time <= today400pm:
             price = regularmarketprice
         else:
             price = postmarketprice
+
+        # if current_time >= today800am and current_time < today929am:
+        #     premarketprice = stock_properties['price']['preMarketPrice']['fmt']
+        #     price = premarketprice
+        # elif current_time >= today930am and current_time <= today400pm:
+        #     price = regularmarketprice
+        # else:
+        #     price = postmarketprice
 
         stock_strong = 'N'
 
@@ -474,7 +488,7 @@ def get_current_price(ticker):
                         if regularmarkethigh > price:
                             percentage_change_high = get_change_percentage(price, regularmarkethigh)
 
-                            if 0.00 <= percentage_change_high <= 1.50:
+                            if 0.00 == percentage_change_high <= 1.50:
                                 stock_strong = 'Y'
 
     except Exception as e:
@@ -486,7 +500,7 @@ def get_current_price(ticker):
 
     my_ticker_dict = {'Company': name, 'Price': price, 'Volume': volume, 'RegularMarketPrice': regularmarketprice,
                       'PostMarketPrice': postmarketprice, 'PreMarketPrice': premarketprice,
-                      'MarketHigh': regularmarkethigh, 'Previous_Close': previous_close, 'stock_strong': stock_strong}
+                      'MarketHigh': regularmarkethigh, 'Previous_Close': previous_close, 'stock_strong': stock_strong, 'fiftytwo_week_high':fiftytwoweekhigh }
 
     return my_ticker_dict
 
@@ -776,7 +790,6 @@ def home(request):
     dict = df_finviz.to_dict(orient='records')
 
     context = {
-        'tickers': Tickers.objects.all(),
         'data': df_finviz.to_html(),
         'symbols': dict
 
@@ -786,3 +799,61 @@ def home(request):
 
 def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
+
+
+# Create your views here.
+def log(request):
+    try:
+        df = pd.DataFrame(list(TickerLogger.objects.order_by('-entrydate').values()))
+
+        df['profit'] = (df.exitprice * df.position) - (df.entryprice * df.position)
+
+        df['cummpl'] = df.profit.cumsum()
+
+        df['percentage'] = (((df.exitprice - df.entryprice) / df.entryprice) * 100)
+
+        df['gapentry'] = (((df.entryprice - df.prevdayclose) / df.prevdayclose) * 100)
+
+        df['equity'] = (df.entryprice * df.position)
+
+        df['exitvalue'] = round((df.exitprice * df.position), 2)
+
+        df['prevdayclose'] = df['prevdayclose'].fillna(0.00)
+        df['prevdayhigh'] = df['prevdayhigh'].fillna(0.00)
+        df['prevdaylow'] = df['prevdaylow'].fillna(0.00)
+        df['float'] = df['prevdayclose'].fillna(0)
+
+        total_wins = sum(df.profit > 0)
+
+        total_rows = df.shape[0]  # gives number of row count
+
+        win_avg_rate = ((total_wins / total_rows) * 100)
+
+        # my_ticker_dict = {'Company': name, 'Price': price, 'Volume': volume, 'RegularMarketPrice': regularmarketprice,
+        #                   'PostMarketPrice': postmarketprice, 'PreMarketPrice': premarketprice,
+        #                   'MarketHigh': regularmarkethigh, 'Previous_Close': previous_close,
+        #                   'stock_strong': stock_strong, 'fiftytwo_week_high': fiftytwoweekhigh}
+
+
+        dict = df.to_dict(orient='records')
+
+        context = {
+            'logs': dict,
+            'avgwin': win_avg_rate
+        }
+
+        return render(request, 'blog/log.html', context)
+    except requests.exceptions.Timeout:
+        # Maybe set up for a retry, or continue in a retry loop
+        print("Too many redirects")
+    except requests.exceptions.TooManyRedirects:
+        # Tell the user their URL was bad and try a different one
+        print("Too many redirects")
+    except requests.exceptions.RequestException as e:
+        # catastrophic error. bail.
+        print(str(e), 'Request Exception.')
+        # sys.exit(1)
+    except Exception as e:
+        print(str(e), ' Log Error')
+
+    return render(request, 'blog/log.html')
