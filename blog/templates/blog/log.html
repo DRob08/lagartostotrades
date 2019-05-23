@@ -15,7 +15,7 @@
 .form-label {
   position: absolute;
   left: 0;
-  top: 10px;
+  top: 16px;
   color: #999;
   background-color: #fff;
   z-index: 10;
@@ -25,13 +25,13 @@
 .form-label-log {
   position: absolute;
   left: 0;
-  top: 10px;
+  top: 16px;
   color: #999;
   background-color: #fff;
   z-index: 10;
   transition: transform 150ms ease-out, font-size 150ms ease-out;
   transform: translateY(-125%);
-  font-size: .85em;
+  font-size: .80em;
 }
 
 .focused .form-label {
@@ -64,111 +64,283 @@
 
 .form-control{
     font-weight: 400;
-    font-size: 22px;
+    font-size: 18px;
 }
+
 
 
     </style>
 
 </head>
 
+<div>
+    <h2><a class="article-title text-info" href="#">{{ avgwin }}</a></h2>
+</div>
+
 {% for log in logs %}
 <article class="media content-section">
     <div class="media-body">
         <div class="article-metadata">
+            {% if log.profit >= 0 %}
             <h2><a class="article-title text-info" href="#">{{ log.ticker }}</a></h2>
-            <a class="mr-2 text-info" href="#">{{ log.user_id }}  {{ log.id }}</a>
-             <medium class="text-muted">{{  log.entrydate|date:'m/d/Y H:i A' }}</medium>
+            {% else %}
+            <h2><a class="article-title text-warning" href="#">{{ log.ticker }}</a></h2>
+            {% endif %}
+
+            <!--<h2><a class="article-title text-info" href="#">{{ log.ticker }}</a></h2> -->
+            <!--<a class="mr-2 text-info" href="#">{{ log.user_id_id }} </a>-->
+            <div class="row mt-2">
+                <div class="col-sm-4 pb-2">
+
+                    <label class="text-info">Entry Date:</label>
+                    <medium class="text-muted">{{ log.entrydate|date:'m/d/Y H:i A' }}</medium>
+
+                </div>
+
+                <div class="col-sm-4 pb-2">
+                    <label class="text-info">Exit Date:</label>
+                    <medium class="text-muted">{{ log.exitdate|date:'m/d/Y H:i A' }}</medium>
+                </div>
+
+                <div class="col-sm-4 pb-2">
+                    <label class="text-info">Time Elapsed:</label>
+                    <medium class="text-muted">{{ log.entrydate|timesince:log.exitdate }}</medium>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-sm-4 pb-2">
+
+                    <label class="text-info">Type:</label>
+                    <medium class="text-muted">{{ log.type }}</medium>
+
+                </div>
+
+                <div class="col-sm-4 pb-2">
+                    <label class="text-info">Industry:</label>
+                    <medium class="text-muted">{{ log.industry }}</medium>
+                </div>
+
+                <div class="col-sm-4 pb-2">
+                    <label class="text-info">Equity: $</label>
+                    <medium class="text-muted">{{ log.equity }}</medium>
+                </div>
+            </div>
+
+
         </div>
         <!--<h2><a class="article-title" href="#">{{ log.ticker }}</a></h2>-->
 
-        <div class="row mt-4">
-            <div class="col-sm-3 pb-3">
-                <div class="form-group">
-                    <label class="form-label-log text-primary">ENTRY PRICE</label>
-                    <input id="stest" class="form-input form-input-decimal" type="text" style="text-transform:uppercase"
-                           value={{ log.entryprice }} readonly/>
+
+        <div class="row">
+            <div class="col-sm-9 pt-2 ">
+                <div class="row mt-4">
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">ENTRY PRICE</label>
+                            <input id="stest" class="form-input form-input-decimal" type="text"
+                                   style="text-transform:uppercase"
+                                   value={{ log.entryprice }} readonly/>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">POSITION</label>
+                            <input id="sposition" class="form-input form-input-decimal" type="text"
+                                   style="text-transform:uppercase" value={{ log.position }} readonly/>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">STRATEGY</label>
+                            <input id="strategy" class="form-input form-input-decimal" type="text"
+                                   style="text-transform:uppercase" value={{ log.strategy }} readonly/>
+                        </div>
+                    </div>
+
                 </div>
+
+
+                <div class="row mt-4">
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">EXIT PRICE</label>
+                            <input id="exitprice" class="form-input form-input-decimal" type="text"
+                                   style="text-transform:uppercase" value={{ log.exitprice }} readonly/>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">PnL</label>
+                            <input id="pnl" class="form-input form-input-decimal" type="text"
+                                   style="text-transform:uppercase" value=${{ log.profit |floatformat:"2" }} readonly/>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">PERCENTAGE</label>
+                            <input id="percentage" class="form-input form-input-decimal" type="text"
+                                   style="text-transform:uppercase" value={{ log.percentage |floatformat:"2" }}%
+                            readonly/>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">CUMM P/L</label>
+                            <input class="form-input form-input-decimal" type="text"
+                                   style="text-transform:uppercase" value=${{ log.cummpl |floatformat:"2"}} readonly/>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">COMM FEE</label>
+                            <input class="form-input form-input-decimal" type="text"
+                                   style="text-transform:uppercase" value={{ log.commissionfee }} readonly/>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">EXIT EQUITY</label>
+                            <input class="form-input" type="text"
+                                   style="text-transform:uppercase" value={{ log.exitvalue }} readonly/>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="row mt-4">
+                    <div class="col-sm-3 pb-3">
+                        <div class="form-group">
+                            <label class="form-label-log text-primary">GAP % ENTRY</label>
+                            <input class="form-input form-input-decimal" type="text"
+                                   style="text-transform:uppercase" value={{ log.gapentry |floatformat:"2"}}% readonly/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row mt-2">
+                    <div class="col-sm-9 pb-2">
+                        <h4><a class="article-title text-info" href="#">Notes</a></h4>
+
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="4"
+                                  readonly>{{ log.notes }}</textarea>
+                    </div>
+                </div>
+
+                {% if log.news %}
+                <div class="row mt-2">
+                    <div class="col-sm-9 pb-2"><h4><a class="article-title text-info" href="#">News</a></h4> <textarea
+                            class="form-control" id="exampleFormControlTextarea2" rows="4"
+                            readonly>{{ log.news }}</textarea>
+                    </div>
+                </div>
+                {% endif %}
+
             </div>
 
-            <div class="col-sm-3 pb-3">
-                <div class="form-group">
-                    <label class="form-label-log text-primary">POSITION</label>
-                    <input id="sposition" class="form-input form-input-decimal" type="text"
-                           style="text-transform:uppercase" value={{ log.position }} readonly/>
-                </div>
-            </div>
+            <div class="col-sm-3">
 
-            <div class="col-sm-3 pb-3">
-                <div class="form-group">
-                    <label class="form-label-log text-primary">STRATEGY</label>
-                    <input id="strategy" class="form-input form-input-decimal" type="text"
-                           style="text-transform:uppercase" value={{ log.strategy }} readonly/>
-                </div>
-            </div>
+                <div class="sidebar-item">
+                    <div class="card text-primary border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title"> DETAILS</h5>
 
+                            <div class="textfield-box pb-3">
+                                <label class="mb-2" for="exampleTextfieldBox1">Industry</label>
+                                <input aria-describedby="exampleTextfieldBox1Help" class="form-control"
+                                       id="exampleTextfieldBox1" type="text" value={{ log.industry }} readonly>
+                            </div>
+
+                            <div class="textfield-box pb-3">
+                                <label class="mb-2" for="exampleTextfieldBox1">Category</label>
+                                <input aria-describedby="exampleTextfieldBox1Help" class="form-control"
+                                       id="exampleTextfieldBox1" type="text" value={{ log.category }} readonly>
+                            </div>
+
+                            <div class="textfield-box pb-3">
+                                <label class="mb-2" for="exampleTextfieldBox1">Float</label>
+                                <input aria-describedby="exampleTextfieldBox1Help" class="form-control"
+                                       id="exampleTextfieldBox1" type="text" value={{ log.float }}M readonly>
+                            </div>
+
+                            <div class="textfield-box pb-3">
+                                <label class="mb-2" for="exampleTextfieldBox1">Prev Day High</label>
+                                <input aria-describedby="exampleTextfieldBox1Help" class="form-control"
+                                       id="exampleTextfieldBox1" type="text" value={{ log.prevdayhigh }} readonly>
+                            </div>
+
+                            <div class="textfield-box pb-3">
+                                <label class="mb-2" for="exampleTextfieldBox1">Prev Day Low</label>
+                                <input aria-describedby="exampleTextfieldBox1Help" class="form-control"
+                                       id="exampleTextfieldBox1" type="text" value={{ log.prevdaylow }} readonly>
+                            </div>
+
+                             <div class="textfield-box pb-3">
+                                <label class="mb-2" for="exampleTextfieldBox1">Prev Day Close</label>
+                                <input aria-describedby="exampleTextfieldBox1Help" class="form-control"
+                                       id="exampleTextfieldBox1" type="text" value= {{ log.prevdayclose }} readonly>
+                            </div>
+
+                          <!--  <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Item 1</li>
+                                <li class="list-group-item">Item 2</li>
+                                <li class="list-group-item">Item 3</li>
+                            </ul>-->
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
 
 
-        <div class="row mt-4">
-            <div class="col-sm-3 pb-3">
-                <div class="form-group">
-                    <label class="form-label-log text-primary">EXIT PRICE</label>
-                    <input id="exitprice" class="form-input form-input-decimal" type="text"
-                           style="text-transform:uppercase" value={{ log.exitprice }} readonly/>
-                </div>
-            </div>
-
-            <div class="col-sm-3 pb-3">
-                <div class="form-group">
-                    <label class="form-label-log text-primary">PnL</label>
-                    <input id="pnl" class="form-input form-input-decimal" type="text"
-                           style="text-transform:uppercase" value={{ log.profit }} readonly/>
-                </div>
-            </div>
-
-             <div class="col-sm-3 pb-3">
-                <div class="form-group">
-                    <label class="form-label-log text-primary">PERCENTAGE</label>
-                    <input id="percentage" class="form-input form-input-decimal" type="text"
-                           style="text-transform:uppercase" value={{ log.percentage }} readonly/>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-sm-3 pb-3">
-                <div class="form-group">
-                    <label class="form-label-log text-primary">CUMMULATIVE</label>
-                    <input class="form-input form-input-decimal" type="text"
-                           style="text-transform:uppercase" value={{ log.cummpl }} readonly/>
-                </div>
-            </div>
-
-            <div class="col-sm-3 pb-3">
-                <div class="form-group">
-                    <label class="form-label-log text-primary">COMISSION FEE</label>
-                    <input  class="form-input form-input-decimal" type="text"
-                           style="text-transform:uppercase" value={{ log.commissionfee }} readonly/>
-                </div>
-            </div>
-
-             <div class="col-sm-3 pb-3">
-                <div class="form-group">
-                    <label class="form-label-log text-primary">EXIT DATE/TIME</label>
-                    <input  class="form-input" type="text"
-                           style="text-transform:uppercase" value="{{log.exitdate|date:'m/d/Y H:i A'}}" readonly/>
-                </div>
-            </div>
-        </div>
-     <!--   <p class="article-content">{{ log.notes }}</p>-->
-
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="4">{{ log.notes }}</textarea>
-
+        <!--   <p class="article-content">{{ log.notes }}</p>-->
 
 
     </div>
 </article>
 {% endfor %}
+
+
+<!--
+<article>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="title-section">
+                    <h1>Basic Sticky Sidebar with Bootstrap 4</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-7">
+
+                <div class="content-section">
+                    <h2>Content Section</h2>
+                </div>
+            </div>
+            <div class="col-5">
+
+                <div class="sidebar-item">
+                    <div class="make-me-sticky">
+                        <h3>Item 1</h3>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+-->
 {% endblock content %}
