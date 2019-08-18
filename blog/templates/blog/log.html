@@ -64,8 +64,213 @@
 
 .form-control{
     font-weight: 400;
-    font-size: 18px;
+    font-size: 14px;
 }
+
+
+
+.pcs, .cur, .per {
+  white-space: nowrap;
+}
+.pcs:after {
+  content: " pcs";
+}
+.cur:before {
+  content: "$";
+}
+.per:after {
+  content: "%";
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  position: relative;
+  padding: 0.2em 2em;
+  color: #555;
+}
+table {
+  position: relative;
+  width: 100%;
+}
+table th {
+  text-align: left;
+  vertical-align: bottom;
+  border-bottom: 1px solid #ccc;
+  text-transform: uppercase;
+  font: 0.9em 'Oswald', sans-serif;
+}
+table th, table td {
+  padding: 0.4em;
+}
+table.fold-table {
+  background: white;
+  color: #555;
+}
+table.fold-table > tbody > tr.view {
+  <!--font-family: 'Droid Serif', serif;-->
+  transition: all 0.3s ease;
+}
+table.fold-table > tbody > tr.view td, table.fold-table > tbody > tr.view th {
+  cursor: pointer;
+}
+table.fold-table > tbody > tr.view td:first-child, table.fold-table > tbody > tr.view th:first-child {
+  position: relative;
+  padding-left: 20px;
+}
+table.fold-table > tbody > tr.view td:first-child:before, table.fold-table > tbody > tr.view th:first-child:before {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  width: 9px;
+  height: 16px;
+  margin-top: -8px;
+  font: 16px fontawesome;
+  content: "\f0d7";
+  transition: all 0.3s ease;
+}
+table.fold-table > tbody > tr.view:nth-child(4n-1) {
+  <!--background: #eee;-->
+}
+table.fold-table > tbody > tr.view:hover {
+  background: #ffa;
+}
+table.fold-table > tbody > tr.view.open {
+  background: #5f788a;
+  color: white;
+}
+table.fold-table > tbody > tr.view.open td:first-child:before, table.fold-table > tbody > tr.view.open th:first-child:before {
+  transform: rotate(-180deg);
+  color: white;
+}
+table.fold-table > tbody > tr.fold {
+  display: none;
+}
+table.fold-table > tbody > tr.fold.open {
+  display: table-row;
+}
+.fold-content {
+  padding: 0.5em;
+}
+.fold-content h3 {
+  margin-top: 0;
+}
+.fold-content > table {
+  background: white;
+  color: #555;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .2);
+}
+.fold-content > table > tbody > tr {
+  <!--font-family: 'Droid Serif', serif;-->
+  cursor: pointer;
+}
+.fold-content > table > tbody > tr:nth-child(even) {
+  background: #eee;
+}
+.fold-content > table > tbody > tr:hover {
+  background: #ffa;
+}
+.visible-small {
+  display: none;
+}
+.visible-big {
+  display: block;
+}
+
+
+
+ table th, table td {
+    padding: 1em 0.2em;
+  }
+  table th {
+    vertical-align: bottom;
+    padding-bottom: 0;
+  }
+  table.small-friendly > thead {
+    display: none;
+  }
+  table.small-friendly > tbody > tr > td, table.small-friendly > tbody > tr > th {
+    position: relative;
+    padding: 0;
+    padding-left: 50%;
+    display: block;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+  }
+  table.small-friendly > tbody > tr > td:before, table.small-friendly > tbody > tr > th:before {
+    position: absolute;
+    top: 0;
+    left: 0.5em;
+    max-width: 50%;
+    content: attr(data-th) ": ";
+    display: block;
+    font-weight: bold;
+  }
+  table.small-friendly > tbody > tr > td:first-child, table.small-friendly > tbody > tr > th:first-child {
+    margin-top: 1em;
+  }
+  table.small-friendly > tbody > tr > td:last-child, table.small-friendly > tbody > tr > th:last-child {
+    margin-bottom: 1em;
+    border: 0;
+  }
+  .visible-small {
+    display: block;
+  }
+  .visible-big {
+    display: none;
+  }
+
+
+
+
+@media (max-width: 700px) {
+  body {
+    font-size: 0.8em;
+    padding: 0 10px;
+  }
+  table th, table td {
+    padding: 1em 0.2em;
+  }
+  table th {
+    vertical-align: bottom;
+    padding-bottom: 0;
+  }
+  table.small-friendly > thead {
+    display: none;
+  }
+  table.small-friendly > tbody > tr > td, table.small-friendly > tbody > tr > th {
+    position: relative;
+    padding: 0;
+    padding-left: 50%;
+    display: block;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+  }
+  table.small-friendly > tbody > tr > td:before, table.small-friendly > tbody > tr > th:before {
+    position: absolute;
+    top: 0;
+    left: 0.5em;
+    max-width: 50%;
+    content: attr(data-th) ": ";
+    display: block;
+    font-weight: bold;
+  }
+  table.small-friendly > tbody > tr > td:first-child, table.small-friendly > tbody > tr > th:first-child {
+    margin-top: 1em;
+  }
+  table.small-friendly > tbody > tr > td:last-child, table.small-friendly > tbody > tr > th:last-child {
+    margin-bottom: 1em;
+    border: 0;
+  }
+  .visible-small {
+    display: block;
+  }
+  .visible-big {
+    display: none;
+  }
+}
+
+
 
 
 
@@ -73,12 +278,227 @@
 
 </head>
 
-<div>
-    <h2><a class="article-title text-info" href="#">{{ avgwin }}</a></h2>
+<div class="container-fluid">
+
+    <div class="row mt-2">
+        <div class="col-sm-4 pb-2">
+
+            <label class="text-info">Total Trades:</label>
+            <medium class="text-muted">{{ trades.total }}</medium>
+
+        </div>
+        <div class="col-sm-4 pb-2">
+            <label class="text-info">Total Trade Wins:</label>
+            <medium class="text-muted">{{ trades.total_wins }}</medium>
+        </div>
+
+        <div class="col-sm-4 pb-2">
+            <label class="text-info">Total Trade Losses:</label>
+            <medium class="text-muted">{{ trades.total_loss }}</medium>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-sm-4 pb-2">
+
+            <label class="text-info">Avg Winning Trades:</label>
+            <medium class="text-muted">{{ trades.win_avg_rate }}%</medium>
+
+        </div>
+        <div class="col-sm-4 pb-2">
+            <label class="text-info">Avg Losing Trades:</label>
+            <medium class="text-muted">{{ trades.loss_avg_rate }}%</medium>
+        </div>
+
+        <div class="col-sm-4 pb-2">
+            <label class="text-info">Total Cumm P/L:</label>
+            <medium class="text-muted">${{ trades.total_pl }}</medium>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-sm-4 pb-2">
+
+            <label class="text-info">Total Amount Profit:</label>
+            <medium class="text-muted">${{ trades.trade_profit }}</medium>
+
+        </div>
+        <div class="col-sm-4 pb-2">
+            <label class="text-info">Total Amount Losses:</label>
+            <medium class="text-muted">${{ trades.trade_losses }}</medium>
+        </div>
+
+        <div class="col-sm-4 pb-2">
+            <label class="text-info">Avg % Gain:</label>
+            <medium class="text-muted">{{ trades.avg_gain }}%</medium>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-sm-4 pb-2">
+
+            <label class="text-info">Avg % Loss:</label>
+            <medium class="text-muted">{{ trades.avg_loss }}%</medium>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="table-responsive mt-2">
+        <table class="fold-table">
+  <thead>
+    <tr>
+
+      <th>Ticker</th>
+        <th><span class="visible-small">Entry Date/Time</span><span class="visible-big">Entry Date/Time</span></th>
+      <th>Equity</th>
+      <th>Position</th>
+      <th><span class="visible-small" >Industry</span><span class="visible-big">Industry</span></th>
+      <th><span class="visible-small">Strategy</span><span class="visible-big">Strategy</span></th>
+      <!--<th><span class="visible-small">Entry Date/Time</span><span class="visible-big">Entry Date/Time</span></th>-->
+      <th><span class="visible-small">CUMM P/L</span><span class="visible-big">CUMM P/L</span></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for log in logs %}
+
+    <tr class="view">
+
+      <td>{{ log.ticker }}</td>
+        <td class="">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>
+      <td class="cur">{{ log.equity }} </td>
+      <td class="">{{ log.position }} </td>
+      <td>{{ log.industry }}</td>
+      <td class="">{{ log.strategy }} </td>
+      <!--<td class="">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>-->
+      <td class="cur">{{ log.cummpl |floatformat:"2"}}</td>
+    </tr>
+    <tr class="fold">
+      <td colspan="7">
+        <div class="fold-content">
+          <h3>{{ log.ticker }}</h3>
+              <div class="row mt-2">
+                    <div class="col-sm-12">
+                        <h4><a class="article-title text-info" href="#">Notes</a></h4>
+
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
+                                  readonly>{{ log.notes }}</textarea>
+                    </div>
+                </div>
+          <!--<p>{{ log.notes }}</p>-->
+           {% if log.news %}
+                <div class="row mt-2">
+                    <div class="col-sm-12"><h4><a class="article-title text-info" href="#">News</a></h4> <textarea
+                            class="form-control" id="exampleFormControlTextarea2" rows="3"
+                            readonly>{{ log.news }}</textarea>
+                    </div>
+                </div>
+                {% endif %}
+          <table class="small-friendly mt-4">
+            <thead>
+              <tr><th><span class="visible-small" title="Strategy">Strategy</span><span class="visible-big">Strategy</span></th>
+                <th><span class="visible-small" title="Company name">Chart Category</span><span class="visible-big">Chart Category</span></th>
+                <th><span class="visible-small" title="Customer number">Float</span><span class="visible-big">Float</span></th>
+                <th><span class="visible-small" title="Customer name">Prev Day Close</span><span class="visible-big">Prev Day Close</span></th>
+                <th><span class="visible-small" title="Insurance number">Prev Day High</span><span class="visible-big">Prev Day High</span></th>
+                <th><span class="visible-small" title="Strategy">Prev Day Low</span><span class="visible-big">Prev Day Low</span></th>
+                <th>Type</th>
+                <!--<th><span class="visible-small" title="Current">Cur.</span><span class="visible-big">Current</span></th>-->
+                <!--<th>Diff</th>-->
+              </tr>
+            </thead>
+            <tbody>
+                    <!--<h4><a class="article-title text-info text-center" href="#">Details</a></h4>-->
+              <tr>
+
+                  <td data-th="Strategy">{{ log.strategy }}</td>
+                <td data-th="Chart Category">{{ log.category }}</td>
+                <td data-th="Float">{{ log.float }}M</td>
+                <td data-th="Prev Day Close">{{ log.prevdayclose }}</td>
+                <td data-th="Prev Day High">{{ log.prevdayhigh }}</td>
+                <td data-th="Prev Day Low">{{ log.prevdaylow }}</td>
+                <td data-th="Type"><span class="">{{ log.type }}</span></td>
+           <!--     <td data-th="Current"><span class="cur">33 000</span></td>
+                <td data-th="Diff"><span class="cur">13 000</span></td>-->
+              </tr>
+
+              <tr>
+
+                  <td data-th="Entry Date/Time">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>
+                <td data-th="Entry Price">{{ log.entryprice }}</td>
+                <td data-th="Exit Price">{{ log.exitprice }}</td>
+                <td data-th="Position">{{ log.position}}</td>
+                <td data-th="Percentage" class="per">{{ log.percentage |floatformat:"2" }}</td>
+                <td data-th="Gap % Entry - Prev Close" class="per">{{ log.gapentry |floatformat:"2"}}</td>
+                <td data-th="PnL"><span class="cur">{{ log.profit |floatformat:"2" }}</span></td>
+                <td data-th="Exit Equity"><span class="cur">{{ log.exitvalue }}</span></td>
+                <td data-th="Exit Date/Time"><span class="">{{ log.exitdate|date:'m/d/Y H:i A' }}</span></td>
+                  <td data-th="Time Elapsed"><span class="">{{ log.entrydate|timesince:log.exitdate }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>
+
+  {% endfor %}
+    <!-- Row -->
+  <!--  <tr class="view">
+      <td>Company Name</td>
+      <td class="pcs">457</td>
+      <td class="cur">6 535 178</td>
+      <td>-</td>
+      <td class="per">50,71</td>
+      <td class="per">49,21</td>
+      <td class="per">0</td>
+    </tr>
+    <tr class="fold">
+      <td colspan="7">
+        <div class="fold-content">
+          <h3>Company Name</h3>
+          <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+          <table class="small-friendly">
+            <thead>
+              <tr>
+                <th><span class="visible-small" title="Company name">Comp. name</span><span class="visible-big">Company name</span></th>
+                <th><span class="visible-small" title="Customer number">Cust.#</span><span class="visible-big">Customer no</span></th>
+                <th><span class="visible-small" title="Customer name">Cust. name</span><span class="visible-big">Customer name</span></th>
+                <th><span class="visible-small" title="Insurance number">Ins.#</span><span class="visible-big">Insurance no</span></th>
+                <th><span class="visible-small" title="Strategy">Str.</span><span class="visible-big">Strategy</span></th>
+                <th>Start</th>
+                <th><span class="visible-small" title="Current">Cur.</span><span class="visible-big">Current</span></th>
+                <th>Diff</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-th="Company name">Sony</td>
+                <td data-th="Customer no">13245</td>
+                <td data-th="Customer name">John Doe</td>
+                <td data-th="Insurance no">064578</td>
+                <td data-th="Strategy">A, 100%</td>
+                <td data-th="Start"><span class="cur">20 000</span></td>
+                <td data-th="Current"><span class="cur">33 000</span></td>
+                <td data-th="Diff"><span class="cur">13 000</span></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>-->
+  </tbody>
+</table>
+
+
+    </div>
+
 </div>
 
 {% for log in logs %}
-<article class="media content-section">
+<!--<article class="media content-section">
     <div class="media-body">
         <div class="article-metadata">
             {% if log.profit >= 0 %}
@@ -87,8 +507,8 @@
             <h2><a class="article-title text-warning" href="#">{{ log.ticker }}</a></h2>
             {% endif %}
 
-            <!--<h2><a class="article-title text-info" href="#">{{ log.ticker }}</a></h2> -->
-            <!--<a class="mr-2 text-info" href="#">{{ log.user_id_id }} </a>-->
+            &lt;!&ndash;<h2><a class="article-title text-info" href="#">{{ log.ticker }}</a></h2> &ndash;&gt;
+            &lt;!&ndash;<a class="mr-2 text-info" href="#">{{ log.user_id_id }} </a>&ndash;&gt;
             <div class="row mt-2">
                 <div class="col-sm-4 pb-2">
 
@@ -129,7 +549,7 @@
 
 
         </div>
-        <!--<h2><a class="article-title" href="#">{{ log.ticker }}</a></h2>-->
+        &lt;!&ndash;<h2><a class="article-title" href="#">{{ log.ticker }}</a></h2>&ndash;&gt;
 
 
         <div class="row">
@@ -217,7 +637,7 @@
                     </div>
                 </div>
 
-                 <div class="row mt-4">
+                <div class="row mt-4">
                     <div class="col-sm-3 pb-3">
                         <div class="form-group">
                             <label class="form-label-log text-primary">GAP % ENTRY</label>
@@ -285,17 +705,17 @@
                                        id="exampleTextfieldBox1" type="text" value={{ log.prevdaylow }} readonly>
                             </div>
 
-                             <div class="textfield-box pb-3">
+                            <div class="textfield-box pb-3">
                                 <label class="mb-2" for="exampleTextfieldBox1">Prev Day Close</label>
                                 <input aria-describedby="exampleTextfieldBox1Help" class="form-control"
-                                       id="exampleTextfieldBox1" type="text" value= {{ log.prevdayclose }} readonly>
+                                       id="exampleTextfieldBox1" type="text" value={{ log.prevdayclose }} readonly>
                             </div>
 
-                          <!--  <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Item 1</li>
-                                <li class="list-group-item">Item 2</li>
-                                <li class="list-group-item">Item 3</li>
-                            </ul>-->
+                            &lt;!&ndash;  <ul class="list-group list-group-flush">
+                                  <li class="list-group-item">Item 1</li>
+                                  <li class="list-group-item">Item 2</li>
+                                  <li class="list-group-item">Item 3</li>
+                              </ul>&ndash;&gt;
                         </div>
                     </div>
                 </div>
@@ -305,11 +725,13 @@
         </div>
 
 
-        <!--   <p class="article-content">{{ log.notes }}</p>-->
+        &lt;!&ndash;   <p class="article-content">{{ log.notes }}</p>&ndash;&gt;
 
 
     </div>
-</article>
+
+
+</article>-->
 {% endfor %}
 
 
@@ -343,4 +765,17 @@
         </div>
     </div>
 -->
+<script>
+    $(function(){
+  $(".fold-table tr.view").on("click", function(){
+    if($(this).hasClass("open")) {
+      $(this).removeClass("open").next(".fold").removeClass("open");
+    } else {
+      $(".fold-table tr.view").removeClass("open").next(".fold").removeClass("open");
+      $(this).addClass("open").next(".fold").addClass("open");
+    }
+  });
+});
+</script>
+
 {% endblock content %}
