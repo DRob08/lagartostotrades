@@ -3,14 +3,7 @@
 <head>
     <style>
 
-            .form-group {
-  position:relative;
 
-
-  & + .form-group {
-    margin-top: 20px;
-  }
-}
 
 .form-label {
   position: absolute;
@@ -274,7 +267,24 @@ table.fold-table > tbody > tr.fold.open {
 
 
 
+
+
+
+
+
+
+
+
+
     </style>
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.es.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css"
+          rel="stylesheet"/>
+
 
 </head>
 
@@ -346,156 +356,364 @@ table.fold-table > tbody > tr.fold.open {
 </div>
 
 <div class="container">
+    <div class="card card-outline-secondary">
+        <div class="card-body">
+            <div class="row" id="search">
+                <!--<form id="search-form" action="" class="form-inline" method="POST" enctype="multipart/form-data">-->
+
+                <div class=" form-group col-sm-3">
+                    <input class="form-control" type="text" placeholder="Ticker"/>
+                </div>
+
+                <div class=" form-group col-sm-6">
+                    <input class="form-control" type="text" placeholder="Search"/>
+                </div>
+
+                <div class="form-group col-sm-3">
+                    <button type="submit" class="btn btn-block btn-primary">Search</button>
+                </div>
+                <!--</form>-->
+            </div>
+            <div class="row" id="filter">
+                <!--<form>-->
+                <div class="form-group col-sm-3 col-xs-6">
+                    <select data-filter="make" class="filter-make filter form-control">
+                        <option value="">Select Make</option>
+                        <option value="">Show All</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-3 col-xs-6">
+                    <select data-filter="model" class="filter-model filter form-control">
+                        <option value="">Select Model</option>
+                        <option value="">Show All</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-3 col-xs-6">
+                    <select data-filter="type" class="filter-type filter form-control">
+                        <option value="">Select Type</option>
+                        <option value="">Show All</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-3 col-xs-6">
+                    <select data-filter="price" class="filter-price filter form-control">
+                        <option value="">Select Price Range</option>
+                        <option value="">Show All</option>
+                    </select>
+                </div>
+                <!--</form>-->
+            </div>
+
+            <div class="row">
+                <div class=" form-group col-sm-3">
+                    <input class="form-control" type="text" placeholder="Ticker"/>
+                </div>
+
+
+                <div class="input-group col-sm-4">
+                    <input name="datepicker" class="form-control" data-date-format="dd/mm/yyyy"
+                           id="datepicker" placeholder="Start date">
+                    <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-calendar" style="color: black"></i>
+                                    </span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row" id="products">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="container">
     <div class="table-responsive mt-2">
         <table class="fold-table">
-  <thead>
-    <tr>
+            <thead class="thead-dark">
+            <tr>
 
-      <th>Ticker</th>
-        <th><span class="visible-small">Entry Date/Time</span><span class="visible-big">Entry Date/Time</span></th>
-      <th>Equity</th>
-      <th>Position</th>
-      <th><span class="visible-small" >Industry</span><span class="visible-big">Industry</span></th>
-      <th><span class="visible-small">Strategy</span><span class="visible-big">Strategy</span></th>
-      <!--<th><span class="visible-small">Entry Date/Time</span><span class="visible-big">Entry Date/Time</span></th>-->
-      <th><span class="visible-small">CUMM P/L</span><span class="visible-big">CUMM P/L</span></th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for log in logs %}
-
-    <tr class="view">
-
-      <td>{{ log.ticker }}</td>
-        <td class="">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>
-      <td class="cur">{{ log.equity }} </td>
-      <td class="">{{ log.position }} </td>
-      <td>{{ log.industry }}</td>
-      <td class="">{{ log.strategy }} </td>
-      <!--<td class="">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>-->
-      <td class="cur">{{ log.cummpl |floatformat:"2"}}</td>
-    </tr>
-    <tr class="fold">
-      <td colspan="7">
-        <div class="fold-content">
-          <h3>{{ log.ticker }}</h3>
-              <div class="row mt-2">
-                    <div class="col-sm-12">
-                        <h4><a class="article-title text-info" href="#">Notes</a></h4>
-
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
-                                  readonly>{{ log.notes }}</textarea>
-                    </div>
-                </div>
-          <!--<p>{{ log.notes }}</p>-->
-           {% if log.news %}
-                <div class="row mt-2">
-                    <div class="col-sm-12"><h4><a class="article-title text-info" href="#">News</a></h4> <textarea
-                            class="form-control" id="exampleFormControlTextarea2" rows="3"
-                            readonly>{{ log.news }}</textarea>
-                    </div>
-                </div>
-                {% endif %}
-          <table class="small-friendly mt-4">
-            <thead>
-              <tr><th><span class="visible-small" title="Strategy">Strategy</span><span class="visible-big">Strategy</span></th>
-                <th><span class="visible-small" title="Company name">Chart Category</span><span class="visible-big">Chart Category</span></th>
-                <th><span class="visible-small" title="Customer number">Float</span><span class="visible-big">Float</span></th>
-                <th><span class="visible-small" title="Customer name">Prev Day Close</span><span class="visible-big">Prev Day Close</span></th>
-                <th><span class="visible-small" title="Insurance number">Prev Day High</span><span class="visible-big">Prev Day High</span></th>
-                <th><span class="visible-small" title="Strategy">Prev Day Low</span><span class="visible-big">Prev Day Low</span></th>
-                <th>Type</th>
-                <!--<th><span class="visible-small" title="Current">Cur.</span><span class="visible-big">Current</span></th>-->
-                <!--<th>Diff</th>-->
-              </tr>
+                <th>Ticker</th>
+                <th><span class="visible-small">Entry Date/Time</span><span class="visible-big">Entry Date/Time</span>
+                </th>
+                <th>Equity</th>
+                <th>Position</th>
+                <th><span class="visible-small">Industry</span><span class="visible-big">Industry</span></th>
+                <th><span class="visible-small">Strategy</span><span class="visible-big">Strategy</span></th>
+                <!--<th><span class="visible-small">Entry Date/Time</span><span class="visible-big">Entry Date/Time</span></th>-->
+                <th><span class="visible-small">CUMM P/L</span><span class="visible-big">CUMM P/L</span></th>
+            </tr>
             </thead>
             <tbody>
-                    <!--<h4><a class="article-title text-info text-center" href="#">Details</a></h4>-->
-              <tr>
+            {% for log in logs %}
 
-                  <td data-th="Strategy">{{ log.strategy }}</td>
-                <td data-th="Chart Category">{{ log.category }}</td>
-                <td data-th="Float">{{ log.float }}M</td>
-                <td data-th="Prev Day Close">{{ log.prevdayclose }}</td>
-                <td data-th="Prev Day High">{{ log.prevdayhigh }}</td>
-                <td data-th="Prev Day Low">{{ log.prevdaylow }}</td>
-                <td data-th="Type"><span class="">{{ log.type }}</span></td>
-           <!--     <td data-th="Current"><span class="cur">33 000</span></td>
-                <td data-th="Diff"><span class="cur">13 000</span></td>-->
-              </tr>
+            <tr class="view">
 
-              <tr>
+                <td>{{ log.ticker }}</td>
+                <td class="">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>
+                <td class="cur">{{ log.equity|floatformat:"2"}}</td>
+                <td class="">{{ log.position }}</td>
+                <td>{{ log.industry }}</td>
+                <td class="">{{ log.strategy }}</td>
+                <!--<td class="">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>-->
+                <td class="cur">{{ log.cummpl |floatformat:"2"}}</td>
+            </tr>
+            <tr class="fold">
+                <td colspan="7">
+                    <div class="fold-content">
+                        <h3>{{ log.ticker }}</h3>
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <h4><a class="article-title text-info" href="#">Notes</a></h4>
 
-                  <td data-th="Entry Date/Time">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>
-                <td data-th="Entry Price">{{ log.entryprice }}</td>
-                <td data-th="Exit Price">{{ log.exitprice }}</td>
-                <td data-th="Position">{{ log.position}}</td>
-                <td data-th="Percentage" class="per">{{ log.percentage |floatformat:"2" }}</td>
-                <td data-th="Gap % Entry - Prev Close" class="per">{{ log.gapentry |floatformat:"2"}}</td>
-                <td data-th="PnL"><span class="cur">{{ log.profit |floatformat:"2" }}</span></td>
-                <td data-th="Exit Equity"><span class="cur">{{ log.exitvalue }}</span></td>
-                <td data-th="Exit Date/Time"><span class="">{{ log.exitdate|date:'m/d/Y H:i A' }}</span></td>
-                  <td data-th="Time Elapsed"><span class="">{{ log.entrydate|timesince:log.exitdate }}</span></td>
-              </tr>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
+                                          readonly>{{ log.notes }}</textarea>
+                            </div>
+                        </div>
+                        <!--<p>{{ log.notes }}</p>-->
+                        {% if log.news %}
+                        <div class="row mt-2">
+                            <div class="col-sm-12"><h4><a class="article-title text-info" href="#">News</a></h4>
+                                <textarea
+                                        class="form-control" id="exampleFormControlTextarea2" rows="3"
+                                        readonly>{{ log.news }}</textarea>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <table class="small-friendly mt-4">
+                            <thead>
+                            <tr>
+                                <th><span class="visible-small" title="Strategy">Strategy</span><span
+                                        class="visible-big">Strategy</span></th>
+                                <th><span class="visible-small" title="Company name">Chart Category</span><span
+                                        class="visible-big">Chart Category</span></th>
+                                <th><span class="visible-small" title="Customer number">Float</span><span
+                                        class="visible-big">Float</span></th>
+                                <th><span class="visible-small" title="Customer name">Prev Day Close</span><span
+                                        class="visible-big">Prev Day Close</span></th>
+                                <th><span class="visible-small" title="Insurance number">Prev Day High</span><span
+                                        class="visible-big">Prev Day High</span></th>
+                                <th><span class="visible-small" title="Strategy">Prev Day Low</span><span
+                                        class="visible-big">Prev Day Low</span></th>
+                                <th>Type</th>
+                                <!--<th><span class="visible-small" title="Current">Cur.</span><span class="visible-big">Current</span></th>-->
+                                <!--<th>Diff</th>-->
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--<h4><a class="article-title text-info text-center" href="#">Details</a></h4>-->
+                            <tr>
+
+                                <td data-th="Strategy">{{ log.strategy }}</td>
+                                <td data-th="Chart Category">{{ log.category }}</td>
+                                <td data-th="Float">{{ log.float }}M</td>
+                                <td data-th="Prev Day Close">{{ log.prevdayclose }}</td>
+                                <td data-th="Prev Day High">{{ log.prevdayhigh }}</td>
+                                <td data-th="Prev Day Low">{{ log.prevdaylow }}</td>
+                                <td data-th="Type"><span class="">{{ log.type }}</span></td>
+                                <!--     <td data-th="Current"><span class="cur">33 000</span></td>
+                                     <td data-th="Diff"><span class="cur">13 000</span></td>-->
+                            </tr>
+
+                            <tr>
+
+                                <td data-th="Entry Date/Time">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>
+                                <td data-th="Entry Price">{{ log.entryprice }}</td>
+                                <td data-th="Exit Price">{{ log.exitprice }}</td>
+                                <td data-th="Position">{{ log.position}}</td>
+                                <td data-th="Percentage" class="per">{{ log.percentage |floatformat:"2" }}</td>
+                                <td data-th="Gap % Entry - Prev Close" class="per">{{ log.gapentry |floatformat:"2"}}
+                                </td>
+                                <td data-th="PnL"><span class="cur">{{ log.profit |floatformat:"2" }}</span></td>
+                                <td data-th="Exit Equity"><span class="cur">{{ log.exitvalue }}</span></td>
+                                <td data-th="Exit Date/Time"><span class="">{{ log.exitdate|date:'m/d/Y H:i A' }}</span>
+                                </td>
+                                <td data-th="Time Elapsed"><span
+                                        class="">{{ log.entrydate|timesince:log.exitdate }}</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+
+            {% endfor %}
+
             </tbody>
-          </table>
-        </div>
-      </td>
-    </tr>
-
-  {% endfor %}
-    <!-- Row -->
-  <!--  <tr class="view">
-      <td>Company Name</td>
-      <td class="pcs">457</td>
-      <td class="cur">6 535 178</td>
-      <td>-</td>
-      <td class="per">50,71</td>
-      <td class="per">49,21</td>
-      <td class="per">0</td>
-    </tr>
-    <tr class="fold">
-      <td colspan="7">
-        <div class="fold-content">
-          <h3>Company Name</h3>
-          <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
-          <table class="small-friendly">
-            <thead>
-              <tr>
-                <th><span class="visible-small" title="Company name">Comp. name</span><span class="visible-big">Company name</span></th>
-                <th><span class="visible-small" title="Customer number">Cust.#</span><span class="visible-big">Customer no</span></th>
-                <th><span class="visible-small" title="Customer name">Cust. name</span><span class="visible-big">Customer name</span></th>
-                <th><span class="visible-small" title="Insurance number">Ins.#</span><span class="visible-big">Insurance no</span></th>
-                <th><span class="visible-small" title="Strategy">Str.</span><span class="visible-big">Strategy</span></th>
-                <th>Start</th>
-                <th><span class="visible-small" title="Current">Cur.</span><span class="visible-big">Current</span></th>
-                <th>Diff</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-th="Company name">Sony</td>
-                <td data-th="Customer no">13245</td>
-                <td data-th="Customer name">John Doe</td>
-                <td data-th="Insurance no">064578</td>
-                <td data-th="Strategy">A, 100%</td>
-                <td data-th="Start"><span class="cur">20 000</span></td>
-                <td data-th="Current"><span class="cur">33 000</span></td>
-                <td data-th="Diff"><span class="cur">13 000</span></td>
-              </tr>
-
-            </tbody>
-          </table>
-        </div>
-      </td>
-    </tr>-->
-  </tbody>
-</table>
+        </table>
 
 
     </div>
 
 </div>
+
+<!--<div class="container">
+    <div class="table-responsive mt-2">
+        <table class="fold-table">
+            <thead>
+            <tr>
+
+                <th>Ticker</th>
+                <th><span class="visible-small">Entry Date/Time</span><span class="visible-big">Entry Date/Time</span>
+                </th>
+                <th>Equity</th>
+                <th>Position</th>
+                <th><span class="visible-small">Industry</span><span class="visible-big">Industry</span></th>
+                <th><span class="visible-small">Strategy</span><span class="visible-big">Strategy</span></th>
+                &lt;!&ndash;<th><span class="visible-small">Entry Date/Time</span><span class="visible-big">Entry Date/Time</span></th>&ndash;&gt;
+                <th><span class="visible-small">CUMM P/L</span><span class="visible-big">CUMM P/L</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for log in logs %}
+
+            <tr class="view">
+
+                <td>{{ log.ticker }}</td>
+                <td class="">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>
+                <td class="cur">{{ log.equity }}</td>
+                <td class="">{{ log.position }}</td>
+                <td>{{ log.industry }}</td>
+                <td class="">{{ log.strategy }}</td>
+                &lt;!&ndash;<td class="">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>&ndash;&gt;
+                <td class="cur">{{ log.cummpl |floatformat:"2"}}</td>
+            </tr>
+            <tr class="fold">
+                <td colspan="7">
+                    <div class="fold-content">
+                        <h3>{{ log.ticker }}</h3>
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <h4><a class="article-title text-info" href="#">Notes</a></h4>
+
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"
+                                          readonly>{{ log.notes }}</textarea>
+                            </div>
+                        </div>
+                        &lt;!&ndash;<p>{{ log.notes }}</p>&ndash;&gt;
+                        {% if log.news %}
+                        <div class="row mt-2">
+                            <div class="col-sm-12"><h4><a class="article-title text-info" href="#">News</a></h4>
+                                <textarea
+                                        class="form-control" id="exampleFormControlTextarea2" rows="3"
+                                        readonly>{{ log.news }}</textarea>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <table class="small-friendly mt-4">
+                            <thead>
+                            <tr>
+                                <th><span class="visible-small" title="Strategy">Strategy</span><span
+                                        class="visible-big">Strategy</span></th>
+                                <th><span class="visible-small" title="Company name">Chart Category</span><span
+                                        class="visible-big">Chart Category</span></th>
+                                <th><span class="visible-small" title="Customer number">Float</span><span
+                                        class="visible-big">Float</span></th>
+                                <th><span class="visible-small" title="Customer name">Prev Day Close</span><span
+                                        class="visible-big">Prev Day Close</span></th>
+                                <th><span class="visible-small" title="Insurance number">Prev Day High</span><span
+                                        class="visible-big">Prev Day High</span></th>
+                                <th><span class="visible-small" title="Strategy">Prev Day Low</span><span
+                                        class="visible-big">Prev Day Low</span></th>
+                                <th>Type</th>
+                                &lt;!&ndash;<th><span class="visible-small" title="Current">Cur.</span><span class="visible-big">Current</span></th>&ndash;&gt;
+                                &lt;!&ndash;<th>Diff</th>&ndash;&gt;
+                            </tr>
+                            </thead>
+                            <tbody>
+                            &lt;!&ndash;<h4><a class="article-title text-info text-center" href="#">Details</a></h4>&ndash;&gt;
+                            <tr>
+
+                                <td data-th="Strategy">{{ log.strategy }}</td>
+                                <td data-th="Chart Category">{{ log.category }}</td>
+                                <td data-th="Float">{{ log.float }}M</td>
+                                <td data-th="Prev Day Close">{{ log.prevdayclose }}</td>
+                                <td data-th="Prev Day High">{{ log.prevdayhigh }}</td>
+                                <td data-th="Prev Day Low">{{ log.prevdaylow }}</td>
+                                <td data-th="Type"><span class="">{{ log.type }}</span></td>
+                                &lt;!&ndash;     <td data-th="Current"><span class="cur">33 000</span></td>
+                                     <td data-th="Diff"><span class="cur">13 000</span></td>&ndash;&gt;
+                            </tr>
+
+                            <tr>
+
+                                <td data-th="Entry Date/Time">{{ log.entrydate|date:'m/d/Y H:i A' }}</td>
+                                <td data-th="Entry Price">{{ log.entryprice }}</td>
+                                <td data-th="Exit Price">{{ log.exitprice }}</td>
+                                <td data-th="Position">{{ log.position}}</td>
+                                <td data-th="Percentage" class="per">{{ log.percentage |floatformat:"2" }}</td>
+                                <td data-th="Gap % Entry - Prev Close" class="per">{{ log.gapentry |floatformat:"2"}}
+                                </td>
+                                <td data-th="PnL"><span class="cur">{{ log.profit |floatformat:"2" }}</span></td>
+                                <td data-th="Exit Equity"><span class="cur">{{ log.exitvalue }}</span></td>
+                                <td data-th="Exit Date/Time"><span class="">{{ log.exitdate|date:'m/d/Y H:i A' }}</span>
+                                </td>
+                                <td data-th="Time Elapsed"><span
+                                        class="">{{ log.entrydate|timesince:log.exitdate }}</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+
+            {% endfor %}
+            &lt;!&ndash; Row &ndash;&gt;
+            &lt;!&ndash;  <tr class="view">
+                <td>Company Name</td>
+                <td class="pcs">457</td>
+                <td class="cur">6 535 178</td>
+                <td>-</td>
+                <td class="per">50,71</td>
+                <td class="per">49,21</td>
+                <td class="per">0</td>
+              </tr>
+              <tr class="fold">
+                <td colspan="7">
+                  <div class="fold-content">
+                    <h3>Company Name</h3>
+                    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+                    <table class="small-friendly">
+                      <thead>
+                        <tr>
+                          <th><span class="visible-small" title="Company name">Comp. name</span><span class="visible-big">Company name</span></th>
+                          <th><span class="visible-small" title="Customer number">Cust.#</span><span class="visible-big">Customer no</span></th>
+                          <th><span class="visible-small" title="Customer name">Cust. name</span><span class="visible-big">Customer name</span></th>
+                          <th><span class="visible-small" title="Insurance number">Ins.#</span><span class="visible-big">Insurance no</span></th>
+                          <th><span class="visible-small" title="Strategy">Str.</span><span class="visible-big">Strategy</span></th>
+                          <th>Start</th>
+                          <th><span class="visible-small" title="Current">Cur.</span><span class="visible-big">Current</span></th>
+                          <th>Diff</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td data-th="Company name">Sony</td>
+                          <td data-th="Customer no">13245</td>
+                          <td data-th="Customer name">John Doe</td>
+                          <td data-th="Insurance no">064578</td>
+                          <td data-th="Strategy">A, 100%</td>
+                          <td data-th="Start"><span class="cur">20 000</span></td>
+                          <td data-th="Current"><span class="cur">33 000</span></td>
+                          <td data-th="Diff"><span class="cur">13 000</span></td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>&ndash;&gt;
+            </tbody>
+        </table>
+
+
+    </div>
+
+</div>-->
 
 {% for log in logs %}
 <!--<article class="media content-section">
@@ -776,6 +994,24 @@ table.fold-table > tbody > tr.fold.open {
     }
   });
 });
+
+
+ $('#datepicker').datepicker({
+        weekStart: 1,
+        autoclose: true,
+        todayHighlight: true,
+    });
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 {% endblock content %}
