@@ -215,7 +215,6 @@ table.fold-table > tbody > tr.fold.open {
 
 
 
-
 @media (max-width: 700px) {
   body {
     font-size: 0.8em;
@@ -264,18 +263,6 @@ table.fold-table > tbody > tr.fold.open {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     </style>
 
     <script type="text/javascript"
@@ -284,8 +271,6 @@ table.fold-table > tbody > tr.fold.open {
             src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.es.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css"
           rel="stylesheet"/>
-
-
 </head>
 
 <div class="container-fluid">
@@ -362,38 +347,81 @@ table.fold-table > tbody > tr.fold.open {
                 <!--<form id="search-form" action="" class="form-inline" method="POST" enctype="multipart/form-data">-->
 
                 <div class=" form-group col-sm-3">
-                    <input class="form-control" type="text" placeholder="Ticker"/>
+                    <input id="myticker" class="form-control" type="text" placeholder="Ticker"/>
                 </div>
 
-                <div class=" form-group col-sm-6">
+                <!--<div class=" form-group col-sm-6">
                     <input class="form-control" type="text" placeholder="Search"/>
+                </div>-->
+
+                <div class="form-group col-sm-3">
+                    <div class="input-group date">
+                        <input name="datepicker" class="form-control" placeholder="Start Date"
+                               data-date-format="mm/dd/yyyy" id="datepicker">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar" style="color: black"></i></span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group col-sm-3">
-                    <button type="submit" class="btn btn-block btn-primary">Search</button>
+                    <div class="input-group date">
+                        <input name="datepickerend" class="form-control" placeholder="End Date"
+                               data-date-format="mm/dd/yyyy" id="datepickerend">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar" style="color: black"></i></span>
+                        </div>
+                    </div>
                 </div>
+
+                 <div class="form-group col-sm-3 col-xs-6">
+                    <select data-filter="make" class="filter-make filter form-control">
+                        <option value="">Select Category</option>
+                          {% if categories %}
+                                {% for category in categories %}
+                                    <option>{{category.category}}</option>
+                                {% endfor %}
+                          {% endif %}
+                        <option value="">Show All</option>
+                    </select>
+                </div>
+
+                <!-- <div class="form-group col-sm-3">
+                     <button type="submit" class="btn btn-block btn-primary">Search</button>
+                 </div>-->
                 <!--</form>-->
             </div>
             <div class="row" id="filter">
                 <!--<form>-->
                 <div class="form-group col-sm-3 col-xs-6">
                     <select data-filter="make" class="filter-make filter form-control">
-                        <option value="">Select Make</option>
+                        <option value="">Select Strategy</option>
+                          {% if strategies %}
+                                {% for strategy in strategies %}
+                                    <option>{{strategy.strategy}}</option>
+                                {% endfor %}
+                          {% endif %}
                         <option value="">Show All</option>
                     </select>
                 </div>
-                <div class="form-group col-sm-3 col-xs-6">
+                <div class="form-group col-sm-6 col-xs-6">
                     <select data-filter="model" class="filter-model filter form-control">
-                        <option value="">Select Model</option>
+                        <option value="">Select Industry</option>
+
+                             {% if industries %}
+                                {% for industry in industries %}
+                                    <option>{{industry.industry}}</option>
+                                {% endfor %}
+                          {% endif %}
                         <option value="">Show All</option>
                     </select>
                 </div>
-                <div class="form-group col-sm-3 col-xs-6">
+                <!--<div class="form-group col-sm-3 col-xs-6">
                     <select data-filter="type" class="filter-type filter form-control">
                         <option value="">Select Type</option>
                         <option value="">Show All</option>
                     </select>
-                </div>
+                </div>-->
                 <div class="form-group col-sm-3 col-xs-6">
                     <select data-filter="price" class="filter-price filter form-control">
                         <option value="">Select Price Range</option>
@@ -401,23 +429,30 @@ table.fold-table > tbody > tr.fold.open {
                     </select>
                 </div>
                 <!--</form>-->
+
+
             </div>
 
-            <div class="row">
-                <div class=" form-group col-sm-3">
-                    <input class="form-control" type="text" placeholder="Ticker"/>
+            <div class="row align-items-end">
+                <div class="form-group purple-border col-sm-9">
+                    <textarea class="form-control" id="exampleFormControlTextarea4" rows="3"
+                              placeholder="Notes or News"></textarea>
+                </div>
+
+                 <div class="form-group col-sm-3">
+                    <button id="mysearch" class="btn btn-block btn-primary float-right">Search</button>
                 </div>
 
 
-                <div class="input-group col-sm-4">
-                    <input name="datepicker" class="form-control" data-date-format="dd/mm/yyyy"
-                           id="datepicker" placeholder="Start date">
-                    <div class="input-group-append">
-                                    <span class="input-group-text">
-                                        <i class="fa fa-calendar" style="color: black"></i>
-                                    </span>
-                    </div>
-                </div>
+                <!--   <div class="col-sm-4">
+                       <div class="input-group date">
+                           <input name="datepicker" class="form-control" placeholder="Start Date"
+                                  data-date-format="mm/dd/yyyy" id="datepicker">
+                           <div class="input-group-append">
+                               <span class="input-group-text"><i class="fa fa-calendar" style="color: black"></i></span>
+                           </div>
+                       </div>
+                   </div>-->
 
             </div>
 
@@ -1003,11 +1038,35 @@ table.fold-table > tbody > tr.fold.open {
     });
 
 
+  $('#datepickerend').datepicker({
+        weekStart: 1,
+        autoclose: true,
+        todayHighlight: true,
+    });
 
 
+   $('#mysearch').on('click', function() {
+        console.log('SEARCH TEST');
 
+         $.getJSON('{% url "search_filter" %}',{
+              ticker : $('#myticker').val().toUpperCase(),
+              datestart: $('#datepicker').val(),
+              dateend: $('#datepickerend').val()
 
+            },
+            function(data) {
+                console.log('getJSON request succeeded!');
+                console.log(data.logs[0][1]);
 
+            })
+            .done(function() {
+            					console.log('getJSON request succeeded!');
+            				 })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+            					console.log('getJSON request failed' + textStatus);
+            				 });
+
+   });
 
 
 
