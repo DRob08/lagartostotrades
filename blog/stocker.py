@@ -227,8 +227,6 @@ class Stocker():
                     elif (not end_in):
                         trim_df = df[(df['Date'] >= start_date) &
                                      (df['Date'] < end_date)]
-
-
         else:
             valid_start = False
             valid_end = False
