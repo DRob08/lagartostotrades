@@ -22,7 +22,8 @@ from json import loads
 from pandas.tseries.offsets import BDay
 import datetime as DT
 from .models import TickerLogger
-
+import json
+from .stocker import Stocker
 
 posts = [
     {
@@ -500,7 +501,8 @@ def get_current_price(ticker):
 
     my_ticker_dict = {'Company': name, 'Price': price, 'Volume': volume, 'RegularMarketPrice': regularmarketprice,
                       'PostMarketPrice': postmarketprice, 'PreMarketPrice': premarketprice,
-                      'MarketHigh': regularmarkethigh, 'Previous_Close': previous_close, 'stock_strong': stock_strong, 'fiftytwo_week_high':fiftytwoweekhigh }
+                      'MarketHigh': regularmarkethigh, 'Previous_Close': previous_close, 'stock_strong': stock_strong,
+                      'fiftytwo_week_high': fiftytwoweekhigh}
 
     return my_ticker_dict
 
@@ -789,6 +791,20 @@ def home(request):
 
     dict = df_finviz.to_dict(orient='records')
 
+    # microsoft = Stocker('PSTV')
+
+    # microsoft = Stocker(ticker='FFHL')
+
+    # model, model_data = microsoft.create_prophet_model()
+
+    # microsoft.plot_stock()
+
+    # Stocker.buy_and_hold(microsoft, start_date=None, end_date=None, nshares=100)
+
+    # microsoft.predict_future(days=5)
+
+    # Stocker.evaluate_prediction(microsoft,start_date=None, end_date=None, nshares=1000)
+
     context = {
         'data': df_finviz.to_html(),
         'symbols': dict
@@ -801,45 +817,126 @@ def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
 
 
+def search_filter(request):
+    try:
+        if request.method == 'GET':
+
+            stock = request.GET['ticker']
+            datestart = request.GET['datestart']
+            dateend = request.GET['dateend']
+
+            if stock and not datestart or not dateend:
+                df = pd.DataFrame(
+                    list(TickerLogger.objects.filter(ticker=stock).values()))
+
+            if datestart and dateend and stock:
+                start_date = datetime.strptime(datestart, '%m/%d/%Y')
+                end_date = datetime.strptime(dateend, '%m/%d/%Y').replace(hour=23, minute=59, second=59)
+
+                df = pd.DataFrame(
+                    list(TickerLogger.objects.filter(ticker=stock, entrydate__gte=start_date,
+                                                     entrydate__lt=end_date).values()))
+
+            if datestart and dateend and  not stock:
+                start_date = datetime.strptime(datestart, '%m/%d/%Y')
+                end_date = datetime.strptime(dateend, '%m/%d/%Y').replace(hour=23, minute=59, second=59)
+
+                df = pd.DataFrame(
+                    list(TickerLogger.objects.filter(entrydate__gte=start_date,
+                                                     entrydate__lt=end_date).values()))
+
+            # dictlogs = df.to_dict(orient='records')
+
+
+
+            # df = pd.DataFrame(list(TickerLogger.objects.all().filter(ticker=stock).values()))
+            # df = pd.DataFrame(list(TickerLogger.objects.filter(entrydate__gte=start_date, entrydate__
+            # lt=end_date).values()))
+
+            df['profit'] = (df.exitprice * df.position) - (df.entryprice * df.position)
+            df['cummpl'] = df.profit.cumsum()
+            df['percentage'] = (((df.exitprice - df.entryprice) / df.entryprice) * 100)
+            df['gapentry'] = (((df.entryprice - df.prevdayclose) / df.prevdayclose) * 100)
+            df['equity'] = (df.entryprice * df.position)
+            df['exitvalue'] = round((df.exitprice * df.position), 2)
+            df['prevdayclose'] = df['prevdayclose'].fillna(0.00)
+            df['prevdayhigh'] = df['prevdayhigh'].fillna(0.00)
+            df['prevdaylow'] = df['prevdaylow'].fillna(0.00)
+            df['float'] = df['prevdayclose'].fillna(0)
+
+            total_wins = sum(df.profit > 0)
+            total_loss = sum(df.profit < 0)
+            profits_amount = round(sum(df.loc[df['profit'] > 0].profit), 2)
+            losses_amount = round(sum(df.loc[df['profit'] < 0].profit), 2)
+            total_rows = df.shape[0]  # gives number of row count
+            win_avg_rate = round(((total_wins / total_rows) * 100), 2)
+            loss_avg_rate = round(((total_loss / total_rows) * 100), 2)
+            avg_per_loss = round((losses_amount / total_rows), 2)
+            avg_per_gain = round((profits_amount / total_rows), 2)
+            avg_inv_amount = round(df.equity.sum() / total_rows, 2)
+
+            dictlogs = df.to_json(orient='records')
+
+
+            my_trades_dict = {'win_avg_rate': win_avg_rate, 'loss_avg_rate': loss_avg_rate,
+                              'total_wins': total_wins, 'total_loss': total_loss, 'total': total_rows,
+                              'trade_profit': profits_amount, 'trade_losses': losses_amount,
+                              'total_pl': round(df["cummpl"].iloc[-1], 2),
+                              'avg_gain': avg_per_gain, 'avg_loss': avg_per_loss, 'avg_inv_amount': avg_inv_amount}
+
+            return HttpResponse(json.dumps({'logs': dictlogs, 'trades': my_trades_dict}), content_type='application/json')
+
+    except Exception as e:
+        print(str(e), 'Loading search_filter.')
+
+
 # Create your views here.
 def log(request):
     try:
         df = pd.DataFrame(list(TickerLogger.objects.order_by('-entrydate').values()))
 
         df['profit'] = (df.exitprice * df.position) - (df.entryprice * df.position)
-
         df['cummpl'] = df.profit.cumsum()
-
         df['percentage'] = (((df.exitprice - df.entryprice) / df.entryprice) * 100)
-
         df['gapentry'] = (((df.entryprice - df.prevdayclose) / df.prevdayclose) * 100)
-
         df['equity'] = (df.entryprice * df.position)
-
         df['exitvalue'] = round((df.exitprice * df.position), 2)
-
         df['prevdayclose'] = df['prevdayclose'].fillna(0.00)
         df['prevdayhigh'] = df['prevdayhigh'].fillna(0.00)
         df['prevdaylow'] = df['prevdaylow'].fillna(0.00)
         df['float'] = df['prevdayclose'].fillna(0)
 
         total_wins = sum(df.profit > 0)
-
+        total_loss = sum(df.profit < 0)
+        profits_amount = round(sum(df.loc[df['profit'] > 0].profit), 2)
+        losses_amount = round(sum(df.loc[df['profit'] < 0].profit), 2)
         total_rows = df.shape[0]  # gives number of row count
+        win_avg_rate = round(((total_wins / total_rows) * 100), 2)
+        loss_avg_rate = round(((total_loss / total_rows) * 100), 2)
+        avg_per_loss = round((losses_amount / total_rows), 2)
+        avg_per_gain = round((profits_amount / total_rows), 2)
+        avg_inv_amount = round(df.equity.sum() / total_rows, 2)
 
-        win_avg_rate = ((total_wins / total_rows) * 100)
-
-        # my_ticker_dict = {'Company': name, 'Price': price, 'Volume': volume, 'RegularMarketPrice': regularmarketprice,
-        #                   'PostMarketPrice': postmarketprice, 'PreMarketPrice': premarketprice,
-        #                   'MarketHigh': regularmarkethigh, 'Previous_Close': previous_close,
-        #                   'stock_strong': stock_strong, 'fiftytwo_week_high': fiftytwoweekhigh}
-
+        my_trades_dict = {'win_avg_rate': win_avg_rate, 'loss_avg_rate': loss_avg_rate,
+                          'total_wins': total_wins, 'total_loss': total_loss, 'total': total_rows,
+                          'trade_profit': profits_amount, 'trade_losses': losses_amount,
+                          'total_pl': round(df["cummpl"].iloc[-1], 2),
+                          'avg_gain': avg_per_gain, 'avg_loss': avg_per_loss, 'avg_inv_amount': avg_inv_amount}
 
         dict = df.to_dict(orient='records')
 
+        strategies = list(TickerLogger.objects.values('strategy').distinct().order_by('strategy'))
+        myindustries = list(TickerLogger.objects.values('industry').distinct().order_by('industry'))
+        mycategories = list(TickerLogger.objects.values('category').distinct().order_by('category'))
+
         context = {
             'logs': dict,
-            'avgwin': win_avg_rate
+            'avgwin': win_avg_rate,
+            'trades': my_trades_dict,
+            'strategies': strategies,
+            'industries': myindustries,
+            'categories': mycategories
+
         }
 
         return render(request, 'blog/log.html', context)
