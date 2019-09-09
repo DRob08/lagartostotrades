@@ -22,6 +22,7 @@ from json import loads
 from pandas.tseries.offsets import BDay
 import datetime as DT
 from .models import TickerLogger
+
 import json
 from .stocker import Stocker
 
@@ -836,23 +837,13 @@ def search_filter(request):
                 df = pd.DataFrame(
                     list(TickerLogger.objects.filter(ticker=stock, entrydate__gte=start_date,
                                                      entrydate__lt=end_date).values()))
-
-            if datestart and dateend and  not stock:
+            if datestart and dateend and not stock:
                 start_date = datetime.strptime(datestart, '%m/%d/%Y')
                 end_date = datetime.strptime(dateend, '%m/%d/%Y').replace(hour=23, minute=59, second=59)
 
                 df = pd.DataFrame(
                     list(TickerLogger.objects.filter(entrydate__gte=start_date,
                                                      entrydate__lt=end_date).values()))
-
-            # dictlogs = df.to_dict(orient='records')
-
-
-
-            # df = pd.DataFrame(list(TickerLogger.objects.all().filter(ticker=stock).values()))
-            # df = pd.DataFrame(list(TickerLogger.objects.filter(entrydate__gte=start_date, entrydate__
-            # lt=end_date).values()))
-
             df['profit'] = (df.exitprice * df.position) - (df.entryprice * df.position)
             df['cummpl'] = df.profit.cumsum()
             df['percentage'] = (((df.exitprice - df.entryprice) / df.entryprice) * 100)
@@ -875,8 +866,15 @@ def search_filter(request):
             avg_per_gain = round((profits_amount / total_rows), 2)
             avg_inv_amount = round(df.equity.sum() / total_rows, 2)
 
-            dictlogs = df.to_json(orient='records')
+            df['entrydate'] = df.entrydate.dt.strftime('%m/%d/%y %H:%M:%S')
+            df['exitdate'] = df.exitdate.dt.strftime('%m/%d/%y %H:%M:%S')
 
+            df['entrydate'] = df['entrydate'].astype(str)
+            df['exitdate'] = df['exitdate'].astype(str)
+
+            # dictlogs = df.to_json(orient='index')
+
+            dictlogs = df.to_json(orient='split')
 
             my_trades_dict = {'win_avg_rate': win_avg_rate, 'loss_avg_rate': loss_avg_rate,
                               'total_wins': total_wins, 'total_loss': total_loss, 'total': total_rows,
@@ -884,7 +882,7 @@ def search_filter(request):
                               'total_pl': round(df["cummpl"].iloc[-1], 2),
                               'avg_gain': avg_per_gain, 'avg_loss': avg_per_loss, 'avg_inv_amount': avg_inv_amount}
 
-            return HttpResponse(json.dumps({'logs': dictlogs, 'trades': my_trades_dict}), content_type='application/json')
+            return HttpResponse(dictlogs, content_type='application/json')
 
     except Exception as e:
         print(str(e), 'Loading search_filter.')
