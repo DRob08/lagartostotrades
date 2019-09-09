@@ -1072,18 +1072,18 @@ function isEmpty(obj) {
                  if (!isEmpty(data)){
                     $("#tablelogs tbody tr").detach();
 
-                     var count = 0;
-
-                     var trowvw = 'trview'
-
                     for (var i = 0; i < data.data.length; i++ ) {
 
-                        $("#tablelogs tbody").append('<tr id="trview" class="view"><td>' + data.data[i][16] +'</td><td>' + data.data[i][2] + '</td><td class="cur">' + data.data[i][24] + '</td><td>' + data.data[i][11] + '</td><td>' + data.data[i][8] + '</td><td>' + data.data[i][16] + '</td><td class="cur">' + data.data[i][21] + '</td></tr>'+
+                        $("#tablelogs tbody").append('<tr class="view"><td>' + data.data[i][16] +'</td><td>' + data.data[i][2] + '</td><td class="cur">' + data.data[i][24] + '</td><td>' + data.data[i][11] + '</td><td>' + data.data[i][8] + '</td><td>' + data.data[i][16] + '</td><td class="cur">' + data.data[i][21] + '</td></tr>'+
                         '<tr class="fold"> <td colspan="7">' +
                         '<div class="fold-content"> <h3> '+ data.data[i][16] +'</h3> </div> </td></tr> ');
 
 
-                        $( ".trview" ).attr("onclick","this.classList.toggle('click')");
+                        // $( ".trview" ).attr("onclick","this.classList.toggle('click')");
+
+                        $( ".view" ).attr("onclick","this.classList.toggle('open')");
+
+                        $( ".fold" ).attr("onclick","this.classList.toggle('open')");
 
 
 
@@ -1105,6 +1105,16 @@ function isEmpty(obj) {
 
 
 
+$( "#tablelogs tbody" ).delegate( "tr", "click", function() {
+  $( this ).toggleClass( "open" );
+  $("#fold").attr("data-toggle",'open');
+
+
+   console.log(this);
+    console.log( $( this ).id);
+    console.log( $( this ).attr("class"));
+
+});
 
 
 
