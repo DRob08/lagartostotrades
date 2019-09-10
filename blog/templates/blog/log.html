@@ -1054,46 +1054,37 @@ function isEmpty(obj) {
 
    $('#mysearch').on('click', function() {
         console.log('SEARCH TEST');
-
          $.getJSON('{% url "search_filter" %}',{
               ticker : $('#myticker').val().toUpperCase(),
               datestart: $('#datepicker').val(),
               dateend: $('#datepickerend').val()
-
             },
             function(data) {
                 console.log('getJSON request succeeded!');
-
                 console.log(data.data.length);
-
-
-
-
                  if (!isEmpty(data)){
                     $("#tablelogs tbody tr").detach();
+                    var addNews = '';
 
-                    var newscatalyst = '';
 
                     for (var i = 0; i < data.data.length; i++ ) {
 
-                        var newscatalyst = '';
-
-                        if (!isEmpty(data.data[i][9] )){
-                            newscatalyst = '<div class="row mt-2"> <div class="col-sm-12"><h4><a class="article-title text-info" href="#">News</a></h4>' +
-                                            '<textarea class="form-control" id="exampleFormControlTextarea2" rows="3"readonly>' +data.data[i][9] + '</textarea> </div> </div>'
+                        if (!isEmpty(data.data[i][9])){
+                            addNews = '<div class="row mt-2"><div class="col-sm-12"><h4><a class="article-title text-info" href="#">News</a></h4> <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"'+ 'readonly>'
+                            + data.data[i][9] + '</textarea>' +'</div></div>'
                         }
 
                         $("#tablelogs tbody").append('<tr class="view"><td>' + data.data[i][17] +'</td><td>' + data.data[i][2] + '</td><td class="cur">' + data.data[i][24] + '</td><td>' + data.data[i][11] + '</td><td>' + data.data[i][8] + '</td><td>' + data.data[i][16] + '</td><td class="cur">' + data.data[i][21] + '</td></tr>'+
                         '<tr class="fold"> <td colspan="7">' +
-                        '<div class="fold-content"> <h3> '+ data.data[i][17] +'</h3> <div class="row mt-2">' +
-                          '<div class="col-sm-12"> <h4><a class="article-title text-info" href="#">Notes</a></h4> <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" ' +
-                            'readonly>'+ data.data[i][10] +'</textarea> </div> </div> </div> </td></tr> ');
+                        '<div class="fold-content"> <h3> '+ data.data[i][17] +'</h3>' +
+                        '<div class="row mt-2"><div class="col-sm-12">'+
+	                    '<h4><a class="article-title text-info" href="#">Notes</a></h4><textarea class="form-control" id="exampleFormControlTextarea1" rows="6" readonly>'+ data.data[i][10] + '</textarea>' +
+                        '</div></div>' + addNews + '</div> </td></tr> ');
 
                         $( ".view" ).attr("onclick","this.classList.toggle('open')");
 
                     }
                  }
-
             })
             .done(function() {
             					console.log('getJSON request succeeded!');
@@ -1101,8 +1092,7 @@ function isEmpty(obj) {
             .fail(function(jqXHR, textStatus, errorThrown) {
             					console.log('getJSON request failed' + textStatus);
             				 });
-
-   });
+ });
 
 $( "#tablelogs tbody" ).delegate( "tr", "click", function() {
 
