@@ -1076,21 +1076,11 @@ function isEmpty(obj) {
 
                         $("#tablelogs tbody").append('<tr class="view"><td>' + data.data[i][16] +'</td><td>' + data.data[i][2] + '</td><td class="cur">' + data.data[i][24] + '</td><td>' + data.data[i][11] + '</td><td>' + data.data[i][8] + '</td><td>' + data.data[i][16] + '</td><td class="cur">' + data.data[i][21] + '</td></tr>'+
                         '<tr class="fold"> <td colspan="7">' +
-                        '<div class="fold-content"> <h3> '+ data.data[i][16] +'</h3> </div> </td></tr> ');
-
-
-                        // $( ".trview" ).attr("onclick","this.classList.toggle('click')");
-
-                       /*$( ".view" ).attr("onclick","this.classList.toggle('open')");
-                       $(".fold").addClass("open");*/
-
-                        //$( ".fold" ).attr("onclick","this.classList.toggle('open')");
+                        '<div class="fold-content"> <h3> '+ data.data[i][16] +'</h3> <div class="row mt-2">' +
+                          '<div class="col-sm-12"> <h4><a class="article-title text-info" href="#">Notes</a></h4> <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" ' +
+                            'readonly>'+ data.data[i][10] +'</textarea> </div> </div> </div> </td></tr> ');
 
                         $( ".view" ).attr("onclick","this.classList.toggle('open')");
-
-
-
-
 
                     }
                  }
@@ -1105,29 +1095,14 @@ function isEmpty(obj) {
 
    });
 
-
-
-
 $( "#tablelogs tbody" ).delegate( "tr", "click", function() {
 
-  /* console.log(this);
-   console.log( $( this ).id);
-   console.log( $( this ).attr("class"));
-
-
-
-   $(".fold").addClass("open");*/
-
-   if ($(this).hasClass("open")) {
+  if ($(this).hasClass("open")) {
      $(".fold-table tr.view").removeClass("open").next(".fold").removeClass("open");
     $(this).addClass("open").next(".fold").addClass("open");
   } else {
     $(this).removeClass("open").next(".fold").removeClass("open");
   }
-
-
-
-
 
 });
 
