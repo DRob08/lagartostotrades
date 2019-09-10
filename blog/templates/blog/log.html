@@ -1081,9 +1081,12 @@ function isEmpty(obj) {
 
                         // $( ".trview" ).attr("onclick","this.classList.toggle('click')");
 
-                        $( ".view" ).attr("onclick","this.classList.toggle('open')");
+                       /*$( ".view" ).attr("onclick","this.classList.toggle('open')");
+                       $(".fold").addClass("open");*/
 
-                        $( ".fold" ).attr("onclick","this.classList.toggle('open')");
+                        //$( ".fold" ).attr("onclick","this.classList.toggle('open')");
+
+                        $( ".view" ).attr("onclick","this.classList.toggle('open')");
 
 
 
@@ -1107,11 +1110,30 @@ function isEmpty(obj) {
 
 $( "#tablelogs tbody" ).delegate( "tr", "click", function() {
 
-   console.log(this);
-    console.log( $( this ).id);
-    console.log( $( this ).attr("class"));
+  /* console.log(this);
+   console.log( $( this ).id);
+   console.log( $( this ).attr("class"));
+
+
+
+   $(".fold").addClass("open");*/
+
+   if ($(this).hasClass("open")) {
+     $(".fold-table tr.view").removeClass("open").next(".fold").removeClass("open");
+    $(this).addClass("open").next(".fold").addClass("open");
+  } else {
+    $(this).removeClass("open").next(".fold").removeClass("open");
+  }
+
+
+
+
 
 });
+
+
+
+
 
 
 
