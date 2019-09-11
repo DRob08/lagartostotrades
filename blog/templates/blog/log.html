@@ -1064,10 +1064,55 @@ function isEmpty(obj) {
                 console.log(data.data.length);
                  if (!isEmpty(data)){
                     $("#tablelogs tbody tr").detach();
-                    var addNews = '';
+
 
 
                     for (var i = 0; i < data.data.length; i++ ) {
+                        var addNews = '';
+                        var myTableFold = '';
+
+                        myTableFold = '<table class="small-friendly mt-4">'+
+                            '<thead> '+
+                            '<tr> '+
+                                '<th><span class="visible-small" title="Strategy">Strategy</span><span class="visible-big">Strategy</span></th> '+
+                                '<th><span class="visible-small" title="Company name">Chart Category</span><span class="visible-big">Chart Category</span></th>'+
+                                '<th><span class="visible-small" title="Customer number">Float</span><span class="visible-big">Float</span></th>'+
+                                '<th><span class="visible-small" title="Customer name">Prev Day Close</span><span class="visible-big">Prev Day Close</span></th>'+
+                                '<th><span class="visible-small" title="Insurance number">Prev Day High</span><span class="visible-big">Prev Day High</span></th>'+
+                                '<th><span class="visible-small" title="Strategy">Prev Day Low</span><span class="visible-big">Prev Day Low '+
+                                '</span></th>'+
+                                '<th>Type</th>'+
+
+                            '</tr> '+
+                            '</thead> '+
+                            '<tbody>'+
+                            '<tr> '+
+
+                                '<td data-th="Strategy">'+ data.data[i][16] +'</td>'+
+                                '<td data-th="Chart Category">'+ data.data[i][0] +'</td> '+
+                                '<td data-th="Float">'+ data.data[i][6] +'M</td> '+
+                                '<td data-th="Prev Day Close">'+ data.data[i][12] +'</td> '+
+                                '<td data-th="Prev Day High">'+ data.data[i][13] +'</td>'+
+                                '<td data-th="Prev Day Low">'+ data.data[i][14] +'</td> '+
+                                '<td data-th="Type"><span class="">'+ data.data[i][18] +'</span></td> '+
+                            '</tr> '+
+
+                            '<tr> '+
+
+                                '<td data-th="Entry Date/Time">'+ data.data[i][2] +'</td> '+
+                                '<td data-th="Entry Price">'+ data.data[i][3] +'</td> '+
+                                '<td data-th="Exit Price">'+ data.data[i][5] +'</td> '+
+                                '<td data-th="Position">'+ data.data[i][11] +'</td> '+
+                                '<td data-th="Percentage" class="per">'+ data.data[i][22] +'</td> '+
+                                '<td data-th="Gap % Entry - Prev Close" class="per">'+ data.data[i][23] +'</td>'+
+                                '<td data-th="PnL"><span class="cur">'+ data.data[i][21] +'</span></td>'+
+                                '<td data-th="Exit Equity"><span class="cur">'+ data.data[i][25] +'</span></td>'+
+                                '<td data-th="Exit Date/Time"><span class="">'+ data.data[i][4] +'</span>'+
+                                '</td>'+
+                                '<td data-th="Time Elapsed"><span class="">'+ data.data[i][17] +'</span></td>'+
+                            '</tr> '+
+                            '</tbody> '+
+                        '</table>'
 
                         if (!isEmpty(data.data[i][9])){
                             addNews = '<div class="row mt-2"><div class="col-sm-12"><h4><a class="article-title text-info" href="#">News</a></h4> <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"'+ 'readonly>'
