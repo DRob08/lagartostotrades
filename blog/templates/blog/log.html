@@ -1110,13 +1110,8 @@ function isEmpty(obj) {
                         $("#tablelogs tbody").append('<tr id="trview" class="view"><td>' + data.data[i][17] +'</td><td>' + data.data[i][2] + '</td><td class="cur">' + data.data[i][24] + '</td><td>' + data.data[i][11] + '</td><td>' + data.data[i][8] + '</td><td>' + data.data[i][16] + '</td><td class="cur">' + data.data[i][21] + '</td></tr>')
                         $("#tablelogs tbody").append('<tr id='+trfolds +' class="fold"> <td id=' + tdfolders + ' colspan="7"> </td></tr>')
 
-                        $('#'+ tdfolders).append($("<div id='dfolder" + count + "'> </div>").attr("class","fold-content"));
-
-
-
-                        $('#profilerow').append($("<div id='profile" + count + "' name='profile' ></div>").attr("class","col-xs-12 col-sm-6 col-md-4"));
-                        profilevar = 'profile' +  count
-
+                        $('#'+ tdfolders).append($('<div id= dfolder' + count + '> <h3> '+ data.data[i][17] +'</h3> </div>').attr("class","fold-content"));
+                        $('#'+ tdfolders).append($('<div class="row mt-2"><div class="col-sm-12"> <h4><a class="article-title text-info" href="#">Notes</a></h4><textarea class="form-control" id="exampleFormControlTextarea1" rows="6" readonly>'+ data.data[i][10] + '</textarea>'));
 
 
 
