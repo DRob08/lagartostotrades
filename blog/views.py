@@ -828,7 +828,7 @@ def search_filter(request):
 
             if stock and not datestart or not dateend:
                 df = pd.DataFrame(
-                    list(TickerLogger.objects.filter(ticker=stock).values()))
+                    list(TickerLogger.objects.filter(ticker=stock).order_by('-entrydate').values()))
 
             if datestart and dateend and stock:
                 start_date = datetime.strptime(datestart, '%m/%d/%Y')
@@ -836,51 +836,53 @@ def search_filter(request):
 
                 df = pd.DataFrame(
                     list(TickerLogger.objects.filter(ticker=stock, entrydate__gte=start_date,
-                                                     entrydate__lt=end_date).values()))
+                                                     entrydate__lt=end_date).order_by('-entrydate').values()))
             if datestart and dateend and not stock:
                 start_date = datetime.strptime(datestart, '%m/%d/%Y')
                 end_date = datetime.strptime(dateend, '%m/%d/%Y').replace(hour=23, minute=59, second=59)
 
                 df = pd.DataFrame(
                     list(TickerLogger.objects.filter(entrydate__gte=start_date,
-                                                     entrydate__lt=end_date).values()))
-            df['profit'] = (df.exitprice * df.position) - (df.entryprice * df.position)
-            df['cummpl'] = df.profit.cumsum()
-            df['percentage'] = (((df.exitprice - df.entryprice) / df.entryprice) * 100)
-            df['gapentry'] = (((df.entryprice - df.prevdayclose) / df.prevdayclose) * 100)
-            df['equity'] = (df.entryprice * df.position)
-            df['exitvalue'] = round((df.exitprice * df.position), 2)
-            df['prevdayclose'] = df['prevdayclose'].fillna(0.00)
-            df['prevdayhigh'] = df['prevdayhigh'].fillna(0.00)
-            df['prevdaylow'] = df['prevdaylow'].fillna(0.00)
-            df['float'] = df['prevdayclose'].fillna(0)
+                                                     entrydate__lt=end_date).order_by('-entrydate').values()))
 
-            total_wins = sum(df.profit > 0)
-            total_loss = sum(df.profit < 0)
-            profits_amount = round(sum(df.loc[df['profit'] > 0].profit), 2)
-            losses_amount = round(sum(df.loc[df['profit'] < 0].profit), 2)
-            total_rows = df.shape[0]  # gives number of row count
-            win_avg_rate = round(((total_wins / total_rows) * 100), 2)
-            loss_avg_rate = round(((total_loss / total_rows) * 100), 2)
-            avg_per_loss = round((losses_amount / total_rows), 2)
-            avg_per_gain = round((profits_amount / total_rows), 2)
-            avg_inv_amount = round(df.equity.sum() / total_rows, 2)
+            if not df.empty:
+                df['profit'] = (df.exitprice * df.position) - (df.entryprice * df.position)
+                df['cummpl'] = df.profit.cumsum()
+                df['percentage'] = (((df.exitprice - df.entryprice) / df.entryprice) * 100)
+                df['gapentry'] = (((df.entryprice - df.prevdayclose) / df.prevdayclose) * 100)
+                df['equity'] = (df.entryprice * df.position)
+                df['exitvalue'] = round((df.exitprice * df.position), 2)
+                df['prevdayclose'] = df['prevdayclose'].fillna(0.00)
+                df['prevdayhigh'] = df['prevdayhigh'].fillna(0.00)
+                df['prevdaylow'] = df['prevdaylow'].fillna(0.00)
+                df['float'] = df['float'].fillna(0)
 
-            df['entrydate'] = df.entrydate.dt.strftime('%m/%d/%y %H:%M:%S')
-            df['exitdate'] = df.exitdate.dt.strftime('%m/%d/%y %H:%M:%S')
+                total_wins = sum(df.profit > 0)
+                total_loss = sum(df.profit < 0)
+                profits_amount = round(sum(df.loc[df['profit'] > 0].profit), 2)
+                losses_amount = round(sum(df.loc[df['profit'] < 0].profit), 2)
+                total_rows = df.shape[0]  # gives number of row count
+                win_avg_rate = round(((total_wins / total_rows) * 100), 2)
+                loss_avg_rate = round(((total_loss / total_rows) * 100), 2)
+                avg_per_loss = round((losses_amount / total_rows), 2)
+                avg_per_gain = round((profits_amount / total_rows), 2)
+                avg_inv_amount = round(df.equity.sum() / total_rows, 2)
 
-            df['entrydate'] = df['entrydate'].astype(str)
-            df['exitdate'] = df['exitdate'].astype(str)
+                df['entrydate'] = df.entrydate.dt.strftime('%m/%d/%y %H:%M:%S')
+                df['exitdate'] = df.exitdate.dt.strftime('%m/%d/%y %H:%M:%S')
 
-            # dictlogs = df.to_json(orient='index')
+                df['entrydate'] = df['entrydate'].astype(str)
+                df['exitdate'] = df['exitdate'].astype(str)
+
+                # dictlogs = df.to_json(orient='index')
+
+                my_trades_dict = {'win_avg_rate': win_avg_rate, 'loss_avg_rate': loss_avg_rate,
+                                  'total_wins': total_wins, 'total_loss': total_loss, 'total': total_rows,
+                                  'trade_profit': profits_amount, 'trade_losses': losses_amount,
+                                  'total_pl': round(df["cummpl"].iloc[-1], 2),
+                                  'avg_gain': avg_per_gain, 'avg_loss': avg_per_loss, 'avg_inv_amount': avg_inv_amount}
 
             dictlogs = df.to_json(orient='split')
-
-            my_trades_dict = {'win_avg_rate': win_avg_rate, 'loss_avg_rate': loss_avg_rate,
-                              'total_wins': total_wins, 'total_loss': total_loss, 'total': total_rows,
-                              'trade_profit': profits_amount, 'trade_losses': losses_amount,
-                              'total_pl': round(df["cummpl"].iloc[-1], 2),
-                              'avg_gain': avg_per_gain, 'avg_loss': avg_per_loss, 'avg_inv_amount': avg_inv_amount}
 
             return HttpResponse(dictlogs, content_type='application/json')
 
