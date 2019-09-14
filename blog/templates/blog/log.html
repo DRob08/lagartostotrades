@@ -348,7 +348,7 @@ table.fold-table > tbody > tr.fold.open {
                 <!--<form id="search-form" action="" class="form-inline" method="POST" enctype="multipart/form-data">-->
 
                 <div class=" form-group col-sm-3">
-                    <input id="myticker" class="form-control" type="text" placeholder="Ticker"/>
+                    <input id="myticker" class="form-control" type="text" placeholder="Ticker" style="text-transform:uppercase"/>
                 </div>
 
                 <!--<div class=" form-group col-sm-6">
@@ -1020,163 +1020,176 @@ table.fold-table > tbody > tr.fold.open {
     </div>
 -->
 <script>
-    $(function(){
-  $(".fold-table tr.view").on("click", function(){
-    if($(this).hasClass("open")) {
-      $(this).removeClass("open").next(".fold").removeClass("open");
-    } else {
-      $(".fold-table tr.view").removeClass("open").next(".fold").removeClass("open");
-      $(this).addClass("open").next(".fold").addClass("open");
-    }
-  });
+ $(function() {
+    $(".fold-table tr.view").on("click", function() {
+        if ($(this).hasClass("open")) {
+            $(this).removeClass("open").next(".fold").removeClass("open");
+        } else {
+            $(".fold-table tr.view").removeClass("open").next(".fold").removeClass("open");
+            $(this).addClass("open").next(".fold").addClass("open");
+        }
+    });
 });
 
 
- $('#datepicker').datepicker({
-        weekStart: 1,
-        autoclose: true,
-        todayHighlight: true,
-    });
+$('#datepicker').datepicker({
+    weekStart: 1,
+    autoclose: true,
+    todayHighlight: true,
+});
 
 
-  $('#datepickerend').datepicker({
-        weekStart: 1,
-        autoclose: true,
-        todayHighlight: true,
-    });
+$('#datepickerend').datepicker({
+    weekStart: 1,
+    autoclose: true,
+    todayHighlight: true,
+});
 
 function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
             return false;
     }
     return true;
 }
 
-  $('#mysearch').on('click', function() {
-        console.log('SEARCH TEST');
-         $.getJSON('{% url "search_filter" %}',{
-              ticker : $('#myticker').val().toUpperCase(),
-              datestart: $('#datepicker').val(),
-              dateend: $('#datepickerend').val()
+$('#mysearch').on('click', function() {
+    console.log('SEARCH TEST');
+    $.getJSON('{% url "search_filter" %}', {
+                ticker: $('#myticker').val().toUpperCase(),
+                datestart: $('#datepicker').val(),
+                dateend: $('#datepickerend').val()
             },
             function(data) {
                 console.log('getJSON request succeeded!');
                 console.log(data.data.length);
-                 if (!isEmpty(data)){
+                if (data.data.length > 0) {
                     $("#tablelogs tbody tr").detach();
                     var addNews = '';
                     var myTableFold = '';
                     var count = 0;
                     var trfolds = 'trfolds'
                     var tdfolders = 'tdfolders'
-                    var tblsmallfold = 'tblfoldsmall'
 
-                    for (var i = 0; i < data.data.length; i++ ) {
-                          var date1 = new Date(data.data[i][2]);
-                          var date2 = new Date(data.data[i][4]);
+                    for (var i = 0; i < data.data.length; i++) {
+                        var date1 = new Date(data.data[i][2]);
+                        var date2 = new Date(data.data[i][4]);
 
-                          count = i + 1;
 
-                          trfolds = 'trfolds' + count
-                          tdfolders = tdfolders + count
-                          tblsmallfold = 'tblfoldsmall' + count
+                        dtentryformatted = [appendLeadingZeroes(date1.getMonth() + 1),
+                            date1.getDate(),
+                            date1.getFullYear()
+                        ].join('/') + ' ' + [appendLeadingZeroes(date1.getHours()),
+                            appendLeadingZeroes(date1.getMinutes())
+                        ].join(':');
 
-                          var msec = date2 - date1;
-                          var mins = Math.floor(msec / 60000);
-                          var hrs = Math.floor(mins / 60);
-                          var days = Math.floor(hrs / 24);
-                          var yrs = Math.floor(days / 365);
+                        dtexitformatted = [appendLeadingZeroes(date2.getMonth() + 1),
+                            date2.getDate(),
+                            date2.getFullYear()
+                        ].join('/') + ' ' + [appendLeadingZeroes(date2.getHours()),
+                            appendLeadingZeroes(date2.getMinutes())
+                        ].join(':');
 
-                        myTableFold = '<table id='+tblsmallfold +' class="small-friendly mt-4">'+
-                            '<thead>'+
-                            '<tr>'+
-                                '<th><span class="visible-small" title="Strategy">Prev Day Low</span><span class="visible-big">Prev Day Low '+
-                                '</span></th>'+
-                            '</tr> '+
-                            '</thead> '+
-                            '<tbody>'+
-                            '<tr> '+
-                                '<td data-th="Strategy">'+ data.data[i][16] +'</td>'+
-                            '</tr> '+
-                            '</tbody> '+
-                        '</table>'
+                        count = i + 1;
+                        trfolds = 'trfolds' + count
+                        tdfolders = 'tdfolders' + count
 
-                        if (!isEmpty(data.data[i][9])){
-                            addNews = '<div class="row mt-2"><div class="col-sm-12"><h4><a class="article-title text-info" href="#">News</a></h4> <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"'+ 'readonly>'
-                            + data.data[i][9] + '</textarea>' +'</div></div>  '
+                        var msec = date2 - date1;
+                        var mins = Math.floor(msec / 60000);
+                        var hrs = Math.floor(mins / 60);
+                        var days = Math.floor(hrs / 24);
+                        var yrs = Math.floor(days / 365);
+
+                        myTableFold = '<table class="small-friendly mt-4">' +
+                            '<thead> ' +
+                            '<tr> ' +
+                            '<th><span class="visible-small" title="Strategy">Strategy</span><span class="visible-big">Strategy</span></th> ' +
+                            '<th><span class="visible-small" title="Company name">Chart Category</span><span class="visible-big">Chart Category</span></th>' +
+                            '<th><span class="visible-small" title="Customer number">Float</span><span class="visible-big">Float</span></th>' +
+                            '<th><span class="visible-small" title="Customer name">Prev Day Close</span><span class="visible-big">Prev Day Close</span></th>' +
+                            '<th><span class="visible-small" title="Insurance number">Prev Day High</span><span class="visible-big">Prev Day High</span></th>' +
+                            '<th><span class="visible-small" title="Strategy">Prev Day Low</span><span class="visible-big">Prev Day Low ' +
+                            '</span></th>' +
+                            '<th>Type</th>' +
+                            '</tr> ' +
+                            '</thead> ' +
+                            '<tbody>' +
+                            '<tr> ' +
+                            '<td data-th="Strategy">' + data.data[i][16] + '</td>' +
+                            '<td data-th="Chart Category">' + data.data[i][0] + '</td> ' +
+                            '<td data-th="Float">' + data.data[i][6] + 'M</td> ' +
+                            '<td data-th="Prev Day Close">' + data.data[i][12] + '</td> ' +
+                            '<td data-th="Prev Day High">' + data.data[i][13] + '</td>' +
+                            '<td data-th="Prev Day Low">' + data.data[i][14] + '</td> ' +
+                            '<td data-th="Type"><span class="">' + data.data[i][18] + '</span></td> ' +
+                            '</tr> ' +
+                            '<tr> ' +
+                            '<td data-th="Entry Date/Time">' + dtentryformatted + '</td> ' +
+                            '<td data-th="Entry Price">' + data.data[i][3] + '</td> ' +
+                            '<td data-th="Exit Price">' + data.data[i][5] + '</td> ' +
+                            '<td data-th="Position">' + data.data[i][11] + '</td> ' +
+                            '<td data-th="Percentage" class="per">' + data.data[i][22].toFixed(2) + '</td> ' +
+                            '<td data-th="Gap % Entry - Prev Close" class="per">' + data.data[i][23].toFixed(2) + '</td>' +
+                            '<td data-th="PnL"><span class="cur">' + data.data[i][20] + '</span></td>' +
+                            '<td data-th="Exit Equity"><span class="cur">' + data.data[i][25] + '</span></td>' +
+                            '<td data-th="Exit Date/Time"><span class="">' + dtexitformatted + '</span>' +
+                            '</td>' +
+                            '<td data-th="Time Elapsed"><span class=""> ' + days + ' days,' + hrs + ' hours, ' + mins + ' minutes </span></td>' +
+                            '</tr> ' +
+                            '</tbody> ' +
+                            '</table>';
+
+                        if (!isEmpty(data.data[i][9])) {
+                            addNews = '<div class="row mt-2"><div class="col-sm-12"><h4><a class="article-title text-info" href="#">News</a></h4> <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"' + 'readonly>' +
+                                data.data[i][9] + '</textarea>' + '</div></div>  ';
                         }
 
-                        $("#tablelogs tbody").append('<tr id="trview" class="view"><td>' + data.data[i][17] +'</td><td>' + data.data[i][2] + '</td><td class="cur">' + data.data[i][24] + '</td><td>' + data.data[i][11] + '</td><td>' + data.data[i][8] + '</td><td>' + data.data[i][16] + '</td><td class="cur">' + data.data[i][21] + '</td></tr>')
-                        $("#tablelogs tbody").append('<tr id='+trfolds +' class="fold"> <td id=' + tdfolders + ' colspan="7"> </td></tr>')
+                        $('#tablelogs > tbody:last-child').append('<tr class="view"><td >' + data.data[i][17] + '</td><td>' + dtentryformatted + '</td><td class="cur">' + data.data[i][24].toFixed(2) + '</td><td>' + data.data[i][11] + '</td><td>' + data.data[i][8] + '</td><td>' + data.data[i][16] + '</td><td class="cur">' + data.data[i][21].toFixed(2) + '</td></tr>');
+                        $('#tablelogs > tbody:last-child').append('<tr id=' + trfolds + ' class="fold"></tr>').attr("class", "fold");
 
-                        $('#'+ tdfolders).append($('<div id= dfolder' + count + '> <h3> '+ data.data[i][17] +'</h3> </div>').attr("class","fold-content"));
-                        $('#'+ tdfolders).append($('<div class="row mt-2"><div class="col-sm-12"> <h4><a class="article-title text-info" href="#">Notes</a></h4><textarea class="form-control" id="exampleFormControlTextarea1" rows="6" readonly>'+ data.data[i][10] + '</textarea>'));
+                        $('#' + trfolds).append($('<td id=' + tdfolders + ' colspan="7"> </td>'));
 
+                        $('#' + tdfolders).append($('<div id= dfolder' + count + '> <h3> ' + data.data[i][17] + '</h3> </div>').attr("class", "fold-content"));
+                        $('#dfolder' + count).append($('<div class="row mt-2"><div class="col-sm-12"> <h4><a class="article-title text-info" href="#">Notes</a></h4><textarea class="form-control" id="exampleFormControlTextarea1" rows="6" readonly>' + data.data[i][10] + '</textarea>'));
 
+                        if (!isEmpty(data.data[i][9])) {
+                            $('#dfolder' + count).append($(addNews));
+                        }
 
-                        $( ".view" ).attr("onclick","this.classList.toggle('open')");
-
+                        $('#dfolder' + count).append($(myTableFold));
                     }
-                 }
+
+                    $(".view").attr("onclick", "this.classList.toggle('open')");
+                } else {
+
+                    $("#tablelogs tbody tr").detach();
+                    $('#tablelogs > tbody:last-child').append('<tr class"text-center"><td colspan="7" class"text-center"> NO RECORDS FOUND </td></tr>');
+
+                }
             })
-            .done(function() {
-            					console.log('getJSON request succeeded!');
-            				 })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-            					console.log('getJSON request failed' + textStatus);
-            				 });
- });
+        .done(function() {
+            console.log('getJSON request succeeded!');
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.log('getJSON request failed' + textStatus);
+        });
+});
 
-$( "#tablelogs tbody" ).delegate( "tr", "click", function() {
-    if($(this).hasClass("open")) {
-      $(".fold-table tr.view").removeClass("open").next(".fold").removeClass("open");
-      //$(this).addClass("open").next(".fold").addClass("open");
-
-      var test =   nextInDOM('.fold', $(this))
-      $(this).addClass("open");
-      test.addClass("open");
-
-
+$("#tablelogs tbody").delegate("tr", "click", function() {
+    if ($(this).hasClass("open")) {
+        $(".fold-table tr.view").removeClass("open").next(".fold").removeClass("open");
+        $(this).addClass("open").next(".fold").addClass("open");
     } else {
-      $(this).removeClass("open").next(".fold").removeClass("open");
+        $(this).removeClass("open").next(".fold").removeClass("open");
     }
 });
 
-
-function nextInDOM(_selector, _subject) {
-    var next = getNext(_subject);
-    while(next.length != 0) {
-        var found = searchFor(_selector, next);
-        if(found != null) return found;
-        next = getNext(next);
+function appendLeadingZeroes(n) {
+    if (n <= 9) {
+        return "0" + n;
     }
-    return null;
+    return n
 }
-function getNext(_subject) {
-    if(_subject.next().length > 0) return _subject.next();
-    return getNext(_subject.parent());
-}
-function searchFor(_selector, _subject) {
-    if(_subject.is(_selector)) return _subject;
-    else {
-        var found = null;
-        _subject.children().each(function() {
-            found = searchFor(_selector, $(this));
-            if(found != null) return false;
-        });
-        return found;
-    }
-    return null; // will/should never get here
-}
-
-
-
-
-
-
-
-
 
 </script>
 
