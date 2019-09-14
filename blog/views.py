@@ -22,6 +22,7 @@ from json import loads
 from pandas.tseries.offsets import BDay
 import datetime as DT
 from .models import TickerLogger
+from django.db.models import Q
 
 import json
 from .stocker import Stocker
@@ -825,6 +826,7 @@ def search_filter(request):
             stock = request.GET['ticker']
             datestart = request.GET['datestart']
             dateend = request.GET['dateend']
+            notesnews = request.GET['notesornews']
 
             if stock and not datestart or not dateend:
                 df = pd.DataFrame(
@@ -844,6 +846,10 @@ def search_filter(request):
                 df = pd.DataFrame(
                     list(TickerLogger.objects.filter(entrydate__gte=start_date,
                                                      entrydate__lt=end_date).order_by('-entrydate').values()))
+            if notesnews and not stock:
+                df = pd.DataFrame(
+                    list(TickerLogger.objects.filter(
+                        Q(notes__contains=notesnews) | Q(news__contains=notesnews)).order_by('-entrydate').values()))
 
             if not df.empty:
                 df['profit'] = (df.exitprice * df.position) - (df.entryprice * df.position)
